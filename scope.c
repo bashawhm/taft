@@ -3,7 +3,30 @@
 #include <assert.h>
 #include "scope.h"
 
-int hashpjw( char *s );
+/* ----------------------------------------------------------------------------- 
+ * hashpjw
+ * Peter J. Weinberger's hash function 
+ * Source: Aho, Sethi, and Ullman, "Compilers", Addison-Wesley, 1986 (page 436).
+ */
+#define EOS		'\0'
+
+int hashpjw(char *s) {
+	char *p; 
+	unsigned h = 0, g; 
+	
+	for ( p = s; *p != EOS; p++ ) 
+	{ 
+		h = (h << 4) + (*p); 
+		if ( (g = h & 0xf0000000) ) 
+		{ 
+			h = h ^ ( g >> 24 ); 
+			h = h ^ g; 
+		} 
+	} 
+	return h % HASH_SIZE; 
+}
+
+
 
 scope_t *mkscope() {
     scope_t *p = (scope_t *) malloc(sizeof(scope_t));
@@ -58,30 +81,3 @@ node_t *scope_insert(scope_t *top, char *name) {
 node_t *scope_del(scope_t *top, char *name) {
     return NULL;
 }
-
-
-/* ----------------------------------------------------------------------------- 
- * hashpjw
- * Peter J. Weinberger's hash function 
- * Source: Aho, Sethi, and Ullman, "Compilers", Addison-Wesley, 1986 (page 436).
- */
-#define EOS		'\0'
-
-int hashpjw(char *s) {
-	char *p; 
-	unsigned h = 0, g; 
-	
-	for ( p = s; *p != EOS; p++ ) 
-	{ 
-		h = (h << 4) + (*p); 
-		if ( (g = h & 0xf0000000) ) 
-		{ 
-			h = h ^ ( g >> 24 ); 
-			h = h ^ g; 
-		} 
-	} 
-	return h % HASH_SIZE; 
-}
-
-
-

@@ -526,12 +526,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    76,    76,    76,    86,    90,    97,   101,   105,   109,
-     116,   117,   121,   122,   126,   130,   130,   131,   131,   135,
-     136,   140,   141,   146,   156,   157,   161,   162,   166,   167,
-     168,   169,   170,   171,   175,   176,   180,   181,   187,   188,
-     192,   193,   197,   198,   199,   203,   204,   208,   209,   210,
-     211,   212,   213,   214
+       0,    75,    75,    75,    85,    89,    96,   100,   104,   108,
+     115,   116,   120,   121,   125,   129,   129,   130,   130,   134,
+     135,   139,   140,   145,   155,   156,   160,   161,   165,   166,
+     167,   168,   169,   170,   174,   175,   179,   180,   186,   187,
+     191,   192,   196,   197,   198,   202,   203,   207,   208,   209,
+     210,   211,   212,   213
 };
 #endif
 
@@ -1513,59 +1513,59 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 76 "pc.y"
+#line 75 "pc.y"
     {
             scope = mkscope();
         }
     break;
 
   case 4:
-#line 87 "pc.y"
+#line 86 "pc.y"
     {
             (yyval.tVal) = mkid(scope_insert(scope, (yyvsp[(1) - (1)].sVal)));
         }
     break;
 
   case 5:
-#line 91 "pc.y"
+#line 90 "pc.y"
     {
             (yyval.tVal) = mktree(COMMA, (yyvsp[(1) - (3)].tVal), mkid(scope_insert(scope, (yyvsp[(3) - (3)].sVal))));
         }
     break;
 
   case 6:
-#line 98 "pc.y"
+#line 97 "pc.y"
     {
             /* update_type_info($3, $5);*/
         }
     break;
 
   case 8:
-#line 106 "pc.y"
+#line 105 "pc.y"
     {
             /*$$ = NULL;*/
         }
     break;
 
   case 9:
-#line 110 "pc.y"
+#line 109 "pc.y"
     {
             /*$$ = NULL;*/
         }
     break;
 
   case 15:
-#line 130 "pc.y"
+#line 129 "pc.y"
     { scope_insert(scope, (yyvsp[(2) - (2)].sVal)); }
     break;
 
   case 17:
-#line 131 "pc.y"
+#line 130 "pc.y"
     { scope_insert(scope, (yyvsp[(2) - (2)].sVal)); }
     break;
 
   case 23:
-#line 147 "pc.y"
+#line 146 "pc.y"
     { 
         (yyval.tVal) = (yyvsp[(2) - (3)].tVal); 
         fprintf(stderr, "\n\nBEGIN TREE PRINT\n\n");
@@ -1575,152 +1575,152 @@ yyreduce:
     break;
 
   case 24:
-#line 156 "pc.y"
+#line 155 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 25:
-#line 157 "pc.y"
+#line 156 "pc.y"
     { (yyval.tVal) = NULL; }
     break;
 
   case 26:
-#line 161 "pc.y"
+#line 160 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 27:
-#line 162 "pc.y"
+#line 161 "pc.y"
     { (yyval.tVal) = mktree(SEMICOLON, (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); }
     break;
 
   case 28:
-#line 166 "pc.y"
+#line 165 "pc.y"
     { (yyval.tVal) = mktree(ASSIGNOP, (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); }
     break;
 
   case 29:
-#line 167 "pc.y"
+#line 166 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 30:
-#line 168 "pc.y"
+#line 167 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 31:
-#line 169 "pc.y"
+#line 168 "pc.y"
     { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (4)].tVal), mktree(THEN, (yyvsp[(4) - (4)].tVal), NULL)); }
     break;
 
   case 32:
-#line 170 "pc.y"
+#line 169 "pc.y"
     { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (6)].tVal), mktree(THEN, (yyvsp[(4) - (6)].tVal), (yyvsp[(6) - (6)].tVal))); }
     break;
 
   case 33:
-#line 171 "pc.y"
+#line 170 "pc.y"
     { (yyval.tVal) = mktree(WHILE, (yyvsp[(2) - (4)].tVal), (yyvsp[(4) - (4)].tVal)); }
     break;
 
   case 34:
-#line 175 "pc.y"
+#line 174 "pc.y"
     { (yyval.tVal) = mkid(scope_search(scope, (yyvsp[(1) - (1)].sVal))); }
     break;
 
   case 35:
-#line 176 "pc.y"
+#line 175 "pc.y"
     { (yyval.tVal) = mktree(ARRAY_ACCESS, mkid(scope_search(scope, (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
     break;
 
   case 36:
-#line 180 "pc.y"
+#line 179 "pc.y"
     { (yyval.tVal) = mkid(scope_search(scope, (yyvsp[(1) - (1)].sVal))); }
     break;
 
   case 37:
-#line 181 "pc.y"
+#line 180 "pc.y"
     { (yyval.tVal) = mktree(PROCEDURE_CALL, mkid(scope_search(scope, (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
     break;
 
   case 38:
-#line 187 "pc.y"
+#line 186 "pc.y"
     { (yyval.tVal)  = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 39:
-#line 188 "pc.y"
+#line 187 "pc.y"
     { (yyval.tVal) = mktree(COMMA, (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); }
     break;
 
   case 40:
-#line 192 "pc.y"
+#line 191 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 41:
-#line 193 "pc.y"
+#line 192 "pc.y"
     { (yyval.tVal) = mkop(RELOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal));}
     break;
 
   case 42:
-#line 197 "pc.y"
+#line 196 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 43:
-#line 198 "pc.y"
+#line 197 "pc.y"
     { (yyval.tVal) = mkop(ADDOP, (yyvsp[(1) - (2)].opVal), (yyvsp[(2) - (2)].tVal), NULL); }
     break;
 
   case 44:
-#line 199 "pc.y"
+#line 198 "pc.y"
     { (yyval.tVal) = mkop(MULOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal));}
     break;
 
   case 45:
-#line 203 "pc.y"
+#line 202 "pc.y"
     { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 46:
-#line 204 "pc.y"
+#line 203 "pc.y"
     { (yyval.tVal) = mkop(MULOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); }
     break;
 
   case 47:
-#line 208 "pc.y"
+#line 207 "pc.y"
     { (yyval.tVal) = mkid(scope_search(scope, (yyvsp[(1) - (1)].sVal))); }
     break;
 
   case 48:
-#line 209 "pc.y"
+#line 208 "pc.y"
     { (yyval.tVal) = mktree(FUNCTION_CALL, mkid(scope_search(scope, (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
     break;
 
   case 49:
-#line 210 "pc.y"
+#line 209 "pc.y"
     { (yyval.tVal) = mktree(ARRAY_ACCESS, mkid(scope_search(scope, (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
     break;
 
   case 50:
-#line 211 "pc.y"
+#line 210 "pc.y"
     { (yyval.tVal) = mkinum((yyvsp[(1) - (1)].iVal)); }
     break;
 
   case 51:
-#line 212 "pc.y"
+#line 211 "pc.y"
     { (yyval.tVal) = mkrnum((yyvsp[(1) - (1)].rVal)); }
     break;
 
   case 52:
-#line 213 "pc.y"
+#line 212 "pc.y"
     { (yyval.tVal) = (yyvsp[(2) - (3)].tVal); }
     break;
 
   case 53:
-#line 214 "pc.y"
+#line 213 "pc.y"
     { (yyval.tVal) = mktree(NOT, (yyvsp[(2) - (2)].tVal), NULL); }
     break;
 
@@ -1940,7 +1940,7 @@ yyreturn:
 }
 
 
-#line 219 "pc.y"
+#line 218 "pc.y"
 
 
 int main() {
