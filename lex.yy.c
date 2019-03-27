@@ -587,7 +587,7 @@ char *yytext_ptr;
 #include "tree.h"
 #include "y.tab.h"
 
-int line_num = 0;
+int line_num = 1;
 
 #line 593 "lex.yy.c"
 

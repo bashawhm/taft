@@ -81,3 +81,54 @@ node_t *scope_insert(scope_t *top, char *name) {
 node_t *scope_del(scope_t *top, char *name) {
     return NULL;
 }
+
+void scope_type(scope_t *top, int type) {
+    for (int i = 0; i < HASH_SIZE; i++) {
+        node_t *tmp = top -> table[i];
+        if (tmp != NULL) {
+            //TODO: Type all nodes in chain. done?
+            do {
+                if (tmp -> type == 0) {
+                    tmp -> type = type;
+                }
+                tmp = tmp -> next;
+            } while (tmp != NULL);
+        }
+    }
+}
+
+void scope_type_all(scope_t *top, int type) {
+    scope_t *p = top;
+    while(p != NULL) {
+        scope_type(p, type);
+        p = p->next;
+    }
+}
+
+node_t *scope_insert_type(scope_t *top, char *name, int type) {
+    int index = hashpjw(name);
+    node_t *tmp = top->table[index];
+    top->table[index] = node_insert(tmp, name);
+    top->table[index]->type = type;
+    return top->table[index];
+}
+
+void scope_print(scope_t *top) {
+    fprintf(stderr, "BEGIN SCOPE PRINT\n");
+    for (int i = 0; i < HASH_SIZE; i++) {
+        node_t *tmp = top -> table[i];
+        if (tmp != NULL) {
+            //TODO: Type all nodes in chain. done?
+            do {
+                fprintf(stderr, "[%s;%d]\n", tmp->name, tmp->type);
+                tmp = tmp -> next;
+            } while (tmp != NULL);
+        }
+    }
+    fprintf(stderr, "END SCOPE PRINT\n");
+}
+
+void scope_type_node(scope_t *top, char *name, int type) {
+    node_t *n = scope_search_all(top, name);
+    n -> type = type;
+}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.h"
+
 /* Linked list */
 
 typedef struct node_s {
@@ -17,4 +19,5 @@ node_t *mknode(char *);
 /* Helpers */
 node_t *node_search(node_t *, char *);
 node_t *node_insert(node_t *, char *);
+bool node_is_typed(node_t *);
 void node_print(node_t *);

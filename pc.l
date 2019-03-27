@@ -6,7 +6,7 @@
 #include "tree.h"
 #include "y.tab.h"
 
-int line_num = 0;
+int line_num = 1;
 %}
 
 whitespace  [ \t]+

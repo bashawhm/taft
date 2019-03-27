@@ -31,5 +31,6 @@ program main(input, output);
         end;
 
 begin
+    a := 0;
     boo( foo(13), 3.14)
 end.

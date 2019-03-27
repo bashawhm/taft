@@ -59,14 +59,20 @@ void aux_tree_print(tree_t *t, int spaces) {
         break;
     }
     case MULOP: {
-        fprintf(stderr, "[MULTOP;%d]\n", t->attribute.opVal);
+        fprintf(stderr, "[MULOP;%d]\n", t->attribute.opVal);
         break;
     }
     case ID: {
         if (t->attribute.nVal != NULL) {
-            fprintf(stderr, "[NODE ID;%s]\n", t->attribute.nVal->name);
+            if (t -> attribute.nVal->type == INUM) {
+                fprintf(stderr, "[NODE ID;%s|NODE TYPE;INUM]\n", t->attribute.nVal->name);
+            } else if (t -> attribute.nVal->type == RNUM) {
+                fprintf(stderr, "[NODE ID;%s|NODE TYPE;RNUM]\n", t->attribute.nVal->name);
+            } else {
+                fprintf(stderr, "[NODE ID;%s|NODE TYPE;%d]\n", t->attribute.nVal->name, t->attribute.nVal->type);
+            }
         } else {
-            fprintf(stderr, "[UNDEFINED REFERENCE]\n");
+            fprintf(stderr, "[NOT IN SCOPE]\n");
         }
         break;
     }

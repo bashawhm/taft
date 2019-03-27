@@ -4,6 +4,7 @@
 #include <string.h>
 #include "node.h"
 #include "tree.h"
+#include "common.h"
 #include "y.tab.h"
 
 /* Constructors */
@@ -12,6 +13,7 @@ node_t *mknode(char *s){
     assert(p != NULL);
     p->name = strdup(s);
     p->next = NULL;
+    p->type = 0;
     return p;
 }
 
@@ -41,4 +43,12 @@ void node_print(node_t *top){
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "END LIST PRINT");
+}
+
+bool node_is_typed(node_t *top) {
+    assert(top != NULL);
+    if (top -> type == 0) {
+        return false;
+    }
+    return true;
 }

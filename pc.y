@@ -68,6 +68,8 @@ scope_t *scope;
 %type <tVal> optional_statements
 %type <tVal> compound_statement
 %type <tVal> identifier_list
+%type <iVal> type
+%type <iVal> standard_type
 
 %%
 
@@ -79,6 +81,7 @@ program:
         subprogram_declarations
         compound_statement
         '.'
+        { /*scope_print(scope);*/ }
     ;
 
 identifier_list
@@ -95,7 +98,7 @@ identifier_list
 declarations
     : declarations VAR identifier_list ':' type ';'
         {
-            /* update_type_info($3, $5);*/
+            scope_type(scope, $5);
         }
     | /* empty */ 
     ;
@@ -103,17 +106,17 @@ declarations
 type
     : standard_type
         {
-            /*$$ = NULL;*/
+            $$ = $1;
         }
     | ARRAY '[' INUM DOTDOT INUM ']' OF standard_type
         {
-            /*$$ = NULL;*/
+            $$ = 0;
         }
     ;
 
 standard_type
-    : INTEGER
-    | REAL
+    : INTEGER {$$ = INUM;}
+    | REAL    {$$ = RNUM;}
     ;
 
 subprogram_declarations
@@ -122,12 +125,20 @@ subprogram_declarations
     ;
 
 subprogram_declaration
-    : subprogram_head declarations subprogram_declarations compound_statement
+    : subprogram_head declarations subprogram_declarations compound_statement {scope_print(scope); scope = pop_scope(scope);}
     ;
 
 subprogram_head
-    : FUNCTION ID { scope_insert(scope, $2); } arguments ':' standard_type ';'
-    | PROCEDURE ID { scope_insert(scope, $2); } arguments ';'
+    : FUNCTION ID {
+        /*Insert function name into outer scope*/
+        scope_insert(scope, $2); 
+        /*Push scope for function arguments*/
+        scope = push_scope(scope); 
+    } arguments ':' standard_type ';' {
+        /*Type the function*/
+        scope_type_node(scope, $2, $6);
+    }
+    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); scope = push_scope(scope); } arguments ';'
     ;
 
 arguments
@@ -136,8 +147,8 @@ arguments
     ;
 
 parameter_list
-    : identifier_list ':' type
-    | parameter_list ';' identifier_list ':' type
+    : identifier_list ':' type                     { scope_type(scope, $3); }
+    | parameter_list ';' identifier_list ':' type  { scope_type(scope, $5); }
 
 
 
@@ -195,7 +206,7 @@ expression
 simple_expression
     : term                         { $$ = $1; }
     | ADDOP term                   { $$ = mkop(ADDOP, $1, $2, NULL); }
-    | simple_expression ADDOP term { $$ = mkop(MULOP, $2, $1, $3);}
+    | simple_expression ADDOP term { $$ = mkop(ADDOP, $2, $1, $3);}
     ;
 
 term
