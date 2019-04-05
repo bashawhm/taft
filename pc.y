@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "tree.h"
 #include "scope.h"
-#include "node.h"
+#include "core_semantic.h"
 #include "y.tab.h"
 
 extern int yyerror(char*);
 extern int yylex();
+extern int line_num;
 
 scope_t *scope;
 %}
@@ -70,6 +70,8 @@ scope_t *scope;
 %type <tVal> identifier_list
 %type <iVal> type
 %type <iVal> standard_type
+%type <tVal> arguments
+%type <tVal> parameter_list
 
 %%
 
@@ -125,30 +127,32 @@ subprogram_declarations
     ;
 
 subprogram_declaration
-    : subprogram_head declarations subprogram_declarations compound_statement {scope_print(scope); scope = pop_scope(scope);}
+    : subprogram_head declarations subprogram_declarations compound_statement { /*scope_print(scope);*/ scope = pop_scope(scope);}
     ;
 
 subprogram_head
     : FUNCTION ID {
         /*Insert function name into outer scope*/
-        scope_insert(scope, $2); 
+        scope_insert_type(scope, $2, FUNCTION);
         /*Push scope for function arguments*/
-        scope = push_scope(scope); 
+        scope = push_scope(scope);
     } arguments ':' standard_type ';' {
         /*Type the function*/
-        scope_type_node(scope, $2, $6);
+        scope_type_function(scope, $2, $6);
+        /*Add args to function node*/
+        tree_to_args(scope_search_all(scope, $2), $4);
     }
-    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); scope = push_scope(scope); } arguments ';'
+    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); scope = push_scope(scope); } arguments ';' {tree_to_args(scope_search_all(scope, $2), $4);}
     ;
 
 arguments
-    : '(' parameter_list ')'
+    : '(' parameter_list ')'  { $$ = $2; }
     | /* Empty */
     ;
 
 parameter_list
-    : identifier_list ':' type                     { scope_type(scope, $3); }
-    | parameter_list ';' identifier_list ':' type  { scope_type(scope, $5); }
+    : identifier_list ':' type                     { $$ = mktree(COMMA, NULL, $1); scope_type(scope, $3); }
+    | parameter_list ';' identifier_list ':' type  { $$ = mktree(COMMA, $1, $3); scope_type(scope, $5); }
 
 
 
@@ -182,13 +186,13 @@ statement
     ;
 
 variable
-    : ID  { $$ = mkid(scope_search(scope, $1)); }
-    | ID '[' expression ']'  { $$ = mktree(ARRAY_ACCESS, mkid(scope_search(scope, $1)), $3); }
+    : ID  { $$ = mkid(check_scope(scope_search_all(scope, $1), $1)); }
+    | ID '[' expression ']'  { $$ = mktree(ARRAY_ACCESS, mkid(check_scope(scope_search_all(scope, $1), $1)), $3); }
     ;
 
 procedure_statement
-    : ID    { $$ = mkid(scope_search(scope, $1)); }
-    | ID '(' expression_list ')' { $$ = mktree(PROCEDURE_CALL, mkid(scope_search(scope, $1)), $3); }
+    : ID    { $$ = mkid(check_scope(scope_search_all(scope, $1), $1)); }
+    | ID '(' expression_list ')' { $$ = mktree(PROCEDURE_CALL, mkid(check_scope(scope_search_all(scope, $1), $1)), $3); check_arg_type($$); }
     ;
 
 
@@ -215,9 +219,9 @@ term
     ;
 
 factor
-    : ID                          { $$ = mkid(scope_search(scope, $1)); }
-    | ID '(' expression_list ')'  { $$ = mktree(FUNCTION_CALL, mkid(scope_search(scope, $1)), $3); }
-    | ID '[' expression ']'       { $$ = mktree(ARRAY_ACCESS, mkid(scope_search(scope, $1)), $3); }
+    : ID                          { $$ = mkid(check_scope(scope_search_all(scope, $1), $1)); }
+    | ID '(' expression_list ')'  { $$ = mktree(FUNCTION_CALL, mkid(check_scope(scope_search_all(scope, $1), $1)), $3); check_arg_type($$); }
+    | ID '[' expression ']'       { $$ = mktree(ARRAY_ACCESS, mkid(check_scope(scope_search_all(scope, $1), $1)), $3); }
     | INUM                        { $$ = mkinum($1); }
     | RNUM                        { $$ = mkrnum($1); }
     | '(' expression_list ')'     { $$ = $2; }

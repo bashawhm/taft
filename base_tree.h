@@ -1,6 +1,5 @@
 #pragma once
 #include <stdlib.h>
-
 #include "node.h"
 
 typedef struct tree_s {
@@ -23,5 +22,4 @@ tree_t *mkid(node_t *id);
 tree_t *mkinum(int inum);
 tree_t *mkrnum(float rnum);
 tree_t *mkop(int type, int attribute, tree_t *left, tree_t *right);
-
 void tree_print(tree_t *tree);

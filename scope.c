@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "scope.h"
+#include "base_tree.h" //Needed to let y.tab.h not complain about missing tree_t type
+#include "y.tab.h"
 
 /* ----------------------------------------------------------------------------- 
  * hashpjw
@@ -73,6 +76,23 @@ node_t *scope_search_all(scope_t *top, char *name) {
     return NULL;
 }
 node_t *scope_insert(scope_t *top, char *name) {
+    if (strcmp(name, "input") == 0) {
+        int index = hashpjw("read");
+        node_t *tmp = top->table[index];
+        top->table[index] = node_insert(tmp, "read");
+        top->table[index] -> type = PROCEDURE;
+    }
+    if (strcmp(name, "output") == 0) {
+        int index = hashpjw("write");
+        node_t *tmp = top->table[index];
+        top->table[index] = node_insert(tmp, "write");
+        top->table[index] -> type = PROCEDURE;
+
+        index = hashpjw("writeln");
+        tmp = top->table[index];
+        top->table[index] = node_insert(tmp, "writeln");
+        top->table[index] -> type = PROCEDURE;
+    }
     int index = hashpjw(name);
     node_t *tmp = top->table[index];
     top->table[index] = node_insert(tmp, name);
@@ -131,4 +151,10 @@ void scope_print(scope_t *top) {
 void scope_type_node(scope_t *top, char *name, int type) {
     node_t *n = scope_search_all(top, name);
     n -> type = type;
+}
+
+    
+void scope_type_function(scope_t *top, char *name, int ret_type) {
+    node_t *n = scope_search_all(top, name);
+    n -> ret_type = ret_type;
 }
