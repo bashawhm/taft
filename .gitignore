@@ -3,3 +3,4 @@
 .DS_Store/
 taft
 taft.dSYM/
+package.json

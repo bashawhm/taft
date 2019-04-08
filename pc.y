@@ -49,6 +49,8 @@ scope_t *scope;
 %token <rVal> RNUM
 %token VAR
 %token IF THEN ELSE WHILE DO
+%nonassoc THEN
+%nonassoc ELSE
 
 %token ARRAY_ACCESS
 %token FUNCTION_CALL
@@ -112,7 +114,7 @@ type
         }
     | ARRAY '[' INUM DOTDOT INUM ']' OF standard_type
         {
-            $$ = 0;
+            $$ = $8;
         }
     ;
 
@@ -147,7 +149,7 @@ subprogram_head
 
 arguments
     : '(' parameter_list ')'  { $$ = $2; }
-    | /* Empty */
+    | /* Empty */  { $$ = NULL; }
     ;
 
 parameter_list
@@ -177,7 +179,7 @@ statement_list
     ;
 
 statement
-    : variable ASSIGNOP expression  { $$ = mktree(ASSIGNOP, $1, $3); }
+    : variable ASSIGNOP expression  { $$ = mktree(ASSIGNOP, $1, $3); check_tree_type($$); }
     | procedure_statement   { $$ = $1; }
     | compound_statement    { $$ = $1; }
     | IF expression THEN statement  { $$ = mktree(IF, $2, mktree(THEN, $4, NULL)); }
@@ -204,18 +206,18 @@ expression_list
 
 expression
     : simple_expression  { $$ = $1; }
-    | simple_expression RELOP simple_expression { $$ = mkop(RELOP, $2, $1, $3);}
+    | simple_expression RELOP simple_expression { $$ = mkop(RELOP, $2, $1, $3); check_tree_type($$); }
     ;
 
 simple_expression
     : term                         { $$ = $1; }
-    | ADDOP term                   { $$ = mkop(ADDOP, $1, $2, NULL); }
-    | simple_expression ADDOP term { $$ = mkop(ADDOP, $2, $1, $3);}
+    | ADDOP term                   { $$ = mkop(ADDOP, $1, $2, NULL); check_tree_type($$); }
+    | simple_expression ADDOP term { $$ = mkop(ADDOP, $2, $1, $3); check_tree_type($$); }
     ;
 
 term
     : factor             { $$ = $1; }
-    | term MULOP factor  { $$ = mkop(MULOP, $2, $1, $3); }
+    | term MULOP factor  { $$ = mkop(MULOP, $2, $1, $3); check_tree_type($$); }
     ;
 
 factor

@@ -9,6 +9,12 @@ program main(input, output);
     MULTILINE TEST COMMENT
     *)
 
+    function baz : integer;
+        var t: real;
+    begin
+        t := 25.5
+    end;
+
     function foo( b: integer) : integer;
         var x: real;
         procedure bar(b: real);
@@ -16,7 +22,7 @@ program main(input, output);
             z := 2.718 
         end;
     begin
-        x := 3.14; 
+        x := 3.14;
         bar(1.1);
         foo := 2*b
     end;
@@ -32,5 +38,10 @@ program main(input, output);
 
 begin
     a := 0;
-    boo( foo(13), 3.14, 4)
+    boo( foo(13), 3.14, 4);
+    if a = 0 then
+        a := 5
+    else
+        a := 7;
+    a := 5
 end.

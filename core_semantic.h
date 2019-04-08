@@ -13,3 +13,4 @@ void tree_to_args(node_t *, tree_t *);
 node_t *check_scope(node_t *n, char *name);
 bool check_arg_type(tree_t *t);
 void arg_list_print(arg_list_t*);
+int check_tree_type(tree_t *t);

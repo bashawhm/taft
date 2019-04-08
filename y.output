@@ -20,9 +20,6 @@ Terminals which are not used
    SEMICOLON
 
 
-State 90 conflicts: 1 shift/reduce
-
-
 Grammar
 
     0 $accept: program $end
@@ -1111,7 +1108,6 @@ state 90
 
     ELSE  shift, and go to state 103
 
-    ELSE      [reduce using rule 30 (statement)]
     $default  reduce using rule 30 (statement)
 
 

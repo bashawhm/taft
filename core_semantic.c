@@ -109,3 +109,62 @@ void arg_list_print(arg_list_t *al) {
     fprintf(stderr, "]\n");
     fprintf(stderr, "\nEND ARG PRINT\n");
 }
+
+int check_tree_type(tree_t *t) {
+    if (t == NULL) {
+        return 0;
+    }
+    if (t->left == NULL && t->right == NULL) {
+        if (t->type == ID) {
+            if (t->attribute.nVal->type == FUNCTION) {
+                return t->attribute.nVal->ret_type;
+            }
+            return t->attribute.nVal->type;
+        } else {
+            return t->type;
+        }
+    }
+    int l_type = -1;
+    int r_type = -2;
+
+    if (t->left != NULL) {
+        if (t->left->type == FUNCTION_CALL || t->left->type == FUNCTION) {
+            l_type = t->left->attribute.nVal->ret_type;
+        } else if (t->left->type == ID) {
+            if (t->left->attribute.nVal->type == FUNCTION) {
+                l_type = t->left->attribute.nVal->ret_type;
+            } else {
+                l_type = t->left->attribute.nVal->type;
+            }
+        } else {
+            l_type = check_tree_type(t->left);
+        }
+    }
+
+    if (t->right != NULL) {
+        if (t->right->type == FUNCTION_CALL || t->right->type == FUNCTION) {
+            r_type = t->right->attribute.nVal->ret_type;
+        } else if (t->right->type == ID) {
+            if (t->right->attribute.nVal->type == FUNCTION) {
+                r_type = t->right->attribute.nVal->ret_type;
+            } else {
+                r_type = t->right->attribute.nVal->type;
+            }
+            r_type = t->right->attribute.nVal->type;
+        } else {
+            r_type = check_tree_type(t->right);
+        }
+    }
+
+    if (t->left != NULL && t->right != NULL) {
+        //compare
+        if (l_type != r_type) {
+            fprintf(stderr, "ERROR: line %d, type conflict on operator. left: %d, right: %d\n", line_num, l_type, r_type);
+            exit(-5);
+        }
+    }
+    if (t->left != NULL) {
+        return l_type;
+    }
+    return r_type;
+}
