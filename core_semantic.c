@@ -30,6 +30,13 @@ arg_list_t *aux_tree_to_arg_list(tree_t *t, bool called) {
             return al;
         }
     }
+    if (t->type == ARRAY_ACCESS) {
+        check_array_index(t);
+        //TODO: make arg list with the array type
+        arg_list_t *al = mkarg_list(t->left->attribute.nVal->type);
+        al -> next = NULL;
+        return al;
+    }
     if (t -> type == INUM) {
         arg_list_t *al = mkarg_list(INUM);
         al -> next = NULL;
@@ -136,6 +143,9 @@ int check_tree_type(tree_t *t) {
             } else {
                 l_type = t->left->attribute.nVal->type;
             }
+        } else if (t->left->type == ARRAY_ACCESS) {
+            check_array_index(t->left);
+            l_type = t->left->left->attribute.nVal->type;
         } else {
             l_type = check_tree_type(t->left);
         }
@@ -151,6 +161,9 @@ int check_tree_type(tree_t *t) {
                 r_type = t->right->attribute.nVal->type;
             }
             r_type = t->right->attribute.nVal->type;
+        } else if (t->right->type == ARRAY_ACCESS) {
+            check_array_index(t->right);
+            r_type = t->right->left->attribute.nVal->type;
         } else {
             r_type = check_tree_type(t->right);
         }
@@ -167,4 +180,15 @@ int check_tree_type(tree_t *t) {
         return l_type;
     }
     return r_type;
+}
+
+void check_array_index(tree_t *t) {
+    if (t == NULL) {
+        return;
+    }
+    int type = check_tree_type(t->right);
+    if (type != INUM) {
+        fprintf(stderr, "ERROR: line %d, must index and array with an integer\n", line_num);
+        exit(-6);
+    }
 }

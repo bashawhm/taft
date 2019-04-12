@@ -3,8 +3,8 @@ FLAGS = -g
 LEX = lex
 YACC = yacc
 
-taft: y.tab.o lex.yy.o base_tree.o scope.o node.o base_semantic.o core_semantic.o
-	$(CC) $(FLAGS) -o taft y.tab.o lex.yy.o base_tree.o scope.o node.o base_semantic.o core_semantic.o -ll -ly
+taft: y.tab.o lex.yy.o base_tree.o scope.o node.o base_semantic.o core_semantic.o codegen.o
+	$(CC) $(FLAGS) -o taft y.tab.o lex.yy.o base_tree.o scope.o node.o base_semantic.o core_semantic.o codegen.o -ll -ly
 
 y.tab.o: y.tab.c
 	$(CC) $(FLAGS) -c y.tab.c
@@ -23,6 +23,9 @@ base_semantic.o: base_semantic.c
 
 core_semantic.o: core_semantic.c
 	$(CC) $(FLAGS) -c core_semantic.c
+
+codegen.o: codegen.c
+	$(CC) $(FLAGS) -c codegen.c
 
 lex.yy.o: lex.yy.c
 	$(CC) $(FLAGS) -c lex.yy.c

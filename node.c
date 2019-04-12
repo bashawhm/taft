@@ -12,10 +12,21 @@ node_t *mknode(char *s) {
     assert(p != NULL);
     p->name = strdup(s);
     p->next = NULL;
+    p->offset = -1;
     p->type = 0;
     p->argc = 0;
     p->arg_list = NULL;
+    p->l_bound = 0;
+    p->r_bound = 0;
     return p;
+}
+
+node_t *mknode_array(char *name, int l_bound, int r_bound) {
+    node_t *n = mknode(name);
+    n->array = ARRAY;
+    n->l_bound = l_bound;
+    n->r_bound = r_bound;
+    return n;
 }
 
 node_t *node_dup(node_t *n) {

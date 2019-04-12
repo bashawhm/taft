@@ -13,7 +13,26 @@ tree_t *mktree(int type, tree_t *left, tree_t *right) {
     p->type = type;
     p->left = left;
     p->right = right;
+    p->array = -1;
+    p->l_bound = 0;
+    p->r_bound = 0;
+    p->label = 0;
     return p;
+}
+
+tree_t *mktree_array(int type, tree_t *left, tree_t *right, int l_bound, int r_bound) {
+    tree_t *t = mktree(type, left, right);
+    t->array = ARRAY;
+    t->l_bound = l_bound;
+    t->r_bound = r_bound;
+    return t;
+}
+
+tree_t *mkarray(tree_t *t, int l_bound, int r_bound) {
+    t->array = ARRAY;
+    t->l_bound = l_bound;
+    t->r_bound = r_bound;
+    return t;
 }
 
 tree_t *mkid(node_t *id) {
@@ -49,6 +68,7 @@ void aux_tree_print(tree_t *t, int spaces) {
     for (int i = 0; i < spaces; ++i) {
         fprintf(stderr, " ");
     }
+    fprintf(stderr, "[%d] ", t->label);
     switch (t->type) {
     case RELOP: {
         fprintf(stderr, "[RELOP;%d]\n", t->attribute.opVal);
@@ -65,9 +85,17 @@ void aux_tree_print(tree_t *t, int spaces) {
     case ID: {
         if (t->attribute.nVal != NULL) {
             if (t -> attribute.nVal->type == INUM) {
-                fprintf(stderr, "[NODE ID;%s | NODE TYPE;INUM]\n", t->attribute.nVal->name);
+                if (t->attribute.nVal->array == ARRAY) {
+                    fprintf(stderr, "[NODE ID;%s | NODE TYPE;INUM | LEFT BOUND %d; RIGHT BOUND %d]\n", t->attribute.nVal->name, t->attribute.nVal->l_bound, t->attribute.nVal->r_bound);
+                } else {
+                    fprintf(stderr, "[NODE ID;%s | NODE TYPE;INUM]\n", t->attribute.nVal->name);
+                }
             } else if (t -> attribute.nVal->type == RNUM) {
-                fprintf(stderr, "[NODE ID;%s | NODE TYPE;RNUM]\n", t->attribute.nVal->name);
+                if (t->attribute.nVal->array == ARRAY) {
+                    fprintf(stderr, "[NODE ID;%s | NODE TYPE;RNUM | LEFT BOUND %d; RIGHT BOUND %d]\n", t->attribute.nVal->name, t->attribute.nVal->l_bound, t->attribute.nVal->r_bound);
+                } else {
+                    fprintf(stderr, "[NODE ID;%s | NODE TYPE;RNUM]\n", t->attribute.nVal->name);
+                }
             } else if (t -> attribute.nVal->type == FUNCTION) {
                 if (t -> attribute.nVal->ret_type == INUM) {
                     if (t -> attribute.nVal->argc == 0) {
@@ -206,6 +234,45 @@ void aux_tree_print(tree_t *t, int spaces) {
 }
 
 void tree_print(tree_t * t) {
+    tree_label(t);
     aux_tree_print(t, 0);
+}
 
+void tree_label(tree_t *t) {
+    if (t == NULL) {
+        return;
+    }
+    tree_label(t->right);
+    tree_label(t->left);
+    if (t->right != NULL) {
+        //If right node is a leaf
+        if (t->right->left == NULL && t->right->right == NULL) {
+            t->right->label = 0;
+        }
+    }
+    if (t->left != NULL) {
+        //If left node is a leaf
+        if (t->left->left == NULL && t->right->right == NULL) {
+            t->left->label = 1;
+        }
+    }
+    if (t->left == NULL && t->right != NULL) {
+        t->label = t->right->label;
+    }
+
+    if (t->left != NULL && t->right == NULL) {
+        t->label = t->left->label;
+    }
+
+    if (t->left != NULL && t->right != NULL) {
+        if (t->left->label < t->right->label) {
+            t->label = t->right->label;
+        }
+        if (t->left->label > t->right->label) {
+            t->label = t->left->label;
+        }
+        if (t->left->label == t->right->label) {
+            t->label = (t->left->label)+1;
+        }
+    }
 }

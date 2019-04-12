@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "scope.h"
 #include "core_semantic.h"
+#include "codegen.h"
 #include "y.tab.h"
 
 extern int yyerror(char*);
@@ -70,8 +71,8 @@ scope_t *scope;
 %type <tVal> optional_statements
 %type <tVal> compound_statement
 %type <tVal> identifier_list
-%type <iVal> type
-%type <iVal> standard_type
+%type <tVal> type
+%type <tVal> standard_type
 %type <tVal> arguments
 %type <tVal> parameter_list
 
@@ -79,13 +80,17 @@ scope_t *scope;
 
 program: 
         PROGRAM ID {
+            gen_prelude();
             scope = mkscope();
         } '(' identifier_list ')' ';'
         declarations
         subprogram_declarations
         compound_statement
         '.'
-        { /*scope_print(scope);*/ }
+        {
+            gen_func(scope, $10, $2);
+            gen_tail();
+        }
     ;
 
 identifier_list
@@ -114,13 +119,13 @@ type
         }
     | ARRAY '[' INUM DOTDOT INUM ']' OF standard_type
         {
-            $$ = $8;
+            $$ = mkarray($8, $3, $5);
         }
     ;
 
 standard_type
-    : INTEGER {$$ = INUM;}
-    | REAL    {$$ = RNUM;}
+    : INTEGER {/*$$ = mkinum(INUM);*/ $$ = mktree(INUM, NULL, NULL); }
+    | REAL    {/*$$ = mkrnum(RNUM);*/ $$ = mktree(RNUM, NULL, NULL); }
     ;
 
 subprogram_declarations
@@ -129,22 +134,24 @@ subprogram_declarations
     ;
 
 subprogram_declaration
-    : subprogram_head declarations subprogram_declarations compound_statement { /*scope_print(scope);*/ scope = pop_scope(scope);}
+    : subprogram_head declarations subprogram_declarations compound_statement { gen_tree(scope, $4); scope = pop_scope(scope);}
     ;
 
 subprogram_head
     : FUNCTION ID {
         /*Insert function name into outer scope*/
         scope_insert_type(scope, $2, FUNCTION);
+        /*Gen asm tag*/
+        gen_tag($2);
         /*Push scope for function arguments*/
         scope = push_scope(scope);
     } arguments ':' standard_type ';' {
         /*Type the function*/
-        scope_type_function(scope, $2, $6);
+        scope_type_function(scope, $2, $6->type);
         /*Add args to function node*/
         tree_to_args(scope_search_all(scope, $2), $4);
     }
-    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); scope = push_scope(scope); } arguments ';' {tree_to_args(scope_search_all(scope, $2), $4);}
+    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); gen_tag($2); scope = push_scope(scope); } arguments ';' {tree_to_args(scope_search_all(scope, $2), $4);}
     ;
 
 arguments
@@ -162,9 +169,6 @@ compound_statement
     : BBEGIN optional_statements END  
     { 
         $$ = $2; 
-        fprintf(stderr, "\n\nBEGIN TREE PRINT\n\n");
-        tree_print($$);
-        fprintf(stderr, "\nEND TREE PRINT\n\n");
     }
     ;
 

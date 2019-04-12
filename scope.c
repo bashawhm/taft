@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "scope.h"
 #include "base_tree.h" //Needed to let y.tab.h not complain about missing tree_t type
+#include "codegen.h"
 #include "y.tab.h"
 
 /* ----------------------------------------------------------------------------- 
@@ -81,6 +82,7 @@ node_t *scope_insert(scope_t *top, char *name) {
         node_t *tmp = top->table[index];
         top->table[index] = node_insert(tmp, "read");
         top->table[index] -> type = PROCEDURE;
+        return top->table[index];
     }
     if (strcmp(name, "output") == 0) {
         int index = hashpjw("write");
@@ -92,6 +94,7 @@ node_t *scope_insert(scope_t *top, char *name) {
         tmp = top->table[index];
         top->table[index] = node_insert(tmp, "writeln");
         top->table[index] -> type = PROCEDURE;
+        return top->table[index];
     }
     int index = hashpjw(name);
     node_t *tmp = top->table[index];
@@ -102,14 +105,18 @@ node_t *scope_del(scope_t *top, char *name) {
     return NULL;
 }
 
-void scope_type(scope_t *top, int type) {
+void scope_type(scope_t *top, tree_t *type) {
     for (int i = 0; i < HASH_SIZE; i++) {
         node_t *tmp = top -> table[i];
         if (tmp != NULL) {
-            //TODO: Type all nodes in chain. done?
             do {
                 if (tmp -> type == 0) {
-                    tmp -> type = type;
+                    if (type->array == ARRAY) {
+                        tmp->array = ARRAY;
+                        tmp->l_bound = type->l_bound;
+                        tmp->r_bound = type->r_bound;
+                    }
+                    tmp -> type = type->type;
                 }
                 tmp = tmp -> next;
             } while (tmp != NULL);
@@ -117,13 +124,13 @@ void scope_type(scope_t *top, int type) {
     }
 }
 
-void scope_type_all(scope_t *top, int type) {
+/*void scope_type_all(scope_t *top, int type) {
     scope_t *p = top;
     while(p != NULL) {
         scope_type(p, type);
         p = p->next;
     }
-}
+}*/
 
 node_t *scope_insert_type(scope_t *top, char *name, int type) {
     int index = hashpjw(name);
@@ -134,13 +141,13 @@ node_t *scope_insert_type(scope_t *top, char *name, int type) {
 }
 
 void scope_print(scope_t *top) {
+    // gen_offset(top);
     fprintf(stderr, "BEGIN SCOPE PRINT\n");
     for (int i = 0; i < HASH_SIZE; i++) {
         node_t *tmp = top -> table[i];
         if (tmp != NULL) {
-            //TODO: Type all nodes in chain. done?
             do {
-                fprintf(stderr, "[%s;%d]\n", tmp->name, tmp->type);
+                fprintf(stderr, "[%s;%d | offset;%d]\n", tmp->name, tmp->type, tmp->offset);
                 tmp = tmp -> next;
             } while (tmp != NULL);
         }

@@ -20,7 +20,7 @@ x   3.3. The ELSE clause always binds to the closest IF (resolution of the dangl
    3.4. The variable type in FOR-DO must match the types of lower bound and upper bound expressions
 
 4. Semantic rules for Arrays
-   4.1. Non-integer valued expressions cannot be used for indexing arrays
+x   4.1. Non-integer valued expressions cannot be used for indexing arrays
 
 5. Semantic rules for Functions 
 x   5.1. Function calls return values of type Integer or Real

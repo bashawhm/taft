@@ -2,8 +2,10 @@
 #include<stdlib.h>
 
 int main() {
-    int a;
-    scanf("%d", &a);
-    printf("%d\n", a);
+    int a = 0;
+    
+    if (a == 0 && a == 1) {
+    }
+
     return 0;
 }

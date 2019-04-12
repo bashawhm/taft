@@ -1,11 +1,7 @@
 program main(input, output);
+    var x,y: integer;
 begin
-    arr[x] := a + b * 13;
-    boo(10 + 13);
-    if (x <= y) then 
-        if (x > y) then 
-            z := -13 
-        else 
-            z := -1
-
+    x := 5;
+    if x < 5 then
+        x := 6
 end.
