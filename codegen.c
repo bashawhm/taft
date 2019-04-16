@@ -11,7 +11,6 @@ extern int yyerror(char*);
 
 extern FILE *taft_asm;
 
-
 reg_stack_t *mkreg_stack(char *reg) {
     reg_stack_t *s = (reg_stack_t*)malloc(sizeof(reg_stack_t));
     s->reg = strdup(reg);
@@ -54,12 +53,13 @@ void gen_prelude() {
 
     fprintf(taft_asm, "str.write.rnum:\n\t.asciz \"%%f\"\n");
     fprintf(taft_asm, "str.writeln.rnum:\n\t.asciz \"%%f\\n\"\n");
-
-    fprintf(taft_asm, "_main:\n");
 }
 
-void gen_tail() {
-    fprintf(taft_asm, "\tret\n");
+void gen_tail(char *name_main) {
+    fprintf(taft_asm, "_main:\n");
+    fprintf(taft_asm, "\tcall %s\n", name_main);
+    fprintf(taft_asm, "\tpopq %%rbp\n");
+    fprintf(taft_asm, "\tretq\n");
     fclose(taft_asm);
 }
 
@@ -171,7 +171,8 @@ void gen_tree(scope_t *top, tree_t *t) {
     fprintf(taft_asm, "\tmovq %%rsp, %%rbp\n");
     fprintf(taft_asm, "\tsubq $%d, %%rsp\n", 8*scope_get_size(top));
     aux_gen_tree(top, t, regs);
-    fprintf(taft_asm, "\tpopq %%rbp\n");
+    fprintf(taft_asm, "\tleave\n");
+    fprintf(taft_asm, "\tretq\n");
 
 }
 

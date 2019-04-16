@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "scope.h"
 #include "core_semantic.h"
 #include "codegen.h"
@@ -75,6 +76,7 @@ scope_t *scope;
 %type <tVal> standard_type
 %type <tVal> arguments
 %type <tVal> parameter_list
+%type <sVal> subprogram_head
 
 %%
 
@@ -88,8 +90,13 @@ program:
         compound_statement
         '.'
         {
-            gen_func(scope, $10, $2);
-            gen_tail();
+            if (strcmp($2, "main") == 0) {
+                gen_func(scope, $10, "main1");
+                gen_tail("main1");
+            } else {
+                gen_func(scope, $10, $2);
+                gen_tail($2);
+            }
         }
     ;
 
@@ -134,15 +141,13 @@ subprogram_declarations
     ;
 
 subprogram_declaration
-    : subprogram_head declarations subprogram_declarations compound_statement { gen_tree(scope, $4); scope = pop_scope(scope);}
+    : subprogram_head declarations subprogram_declarations compound_statement { gen_tag($1); gen_tree(scope, $4); scope = pop_scope(scope);}
     ;
 
 subprogram_head
     : FUNCTION ID {
         /*Insert function name into outer scope*/
         scope_insert_type(scope, $2, FUNCTION);
-        /*Gen asm tag*/
-        gen_tag($2);
         /*Push scope for function arguments*/
         scope = push_scope(scope);
     } arguments ':' standard_type ';' {
@@ -150,8 +155,9 @@ subprogram_head
         scope_type_function(scope, $2, $6->type);
         /*Add args to function node*/
         tree_to_args(scope_search_all(scope, $2), $4);
+        $$ = $2;
     }
-    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); gen_tag($2); scope = push_scope(scope); } arguments ';' {tree_to_args(scope_search_all(scope, $2), $4);}
+    | PROCEDURE ID { scope_insert_type(scope, $2, PROCEDURE); scope = push_scope(scope); } arguments ';' {tree_to_args(scope_search_all(scope, $2), $4); $$ = $2;}
     ;
 
 arguments
