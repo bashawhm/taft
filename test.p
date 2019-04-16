@@ -24,7 +24,7 @@ program main(input, output);
 
     function foo( b: integer) : integer;
         var x: real;
-        procedure bar(b: real);
+        procedure bar2(b: real);
         begin
             z := 2.718 
         end;

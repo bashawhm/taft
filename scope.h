@@ -26,3 +26,4 @@ node_t *scope_insert(scope_t *top, char *name);
 void scope_print(scope_t *top);
 node_t *scope_insert_type(scope_t *top, char *name, int type);
 node_t *scope_del(scope_t *top, char *name);
+int scope_get_size(scope_t *);

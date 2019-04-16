@@ -1,11 +1,6 @@
 #include<stdio.h>
-#include<stdlib.h>
 
 int main() {
-    int a = 0;
-    
-    if (a == 0 && a == 1) {
-    }
-
+    printf("hi\n");
     return 0;
 }

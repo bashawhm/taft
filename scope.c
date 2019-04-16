@@ -165,3 +165,17 @@ void scope_type_function(scope_t *top, char *name, int ret_type) {
     node_t *n = scope_search_all(top, name);
     n -> ret_type = ret_type;
 }
+
+int scope_get_size(scope_t *top) {
+    int num = 0;
+    for (int i = 0; i < HASH_SIZE; i++) {
+        node_t *tmp = top -> table[i];
+        if (tmp != NULL) {
+            do {
+                num++;
+                tmp = tmp -> next;
+            } while (tmp != NULL);
+        }
+    }
+    return num;
+}
