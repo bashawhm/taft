@@ -25,3 +25,4 @@ void gen_func_call(scope_t *, tree_t *, reg_stack_t *);
 void aux_gen_tree(scope_t *, tree_t *, reg_stack_t *);
 void gen_tree(scope_t *, tree_t *);
 void gen_offset(scope_t *);
+char *get_IA64_op(int);

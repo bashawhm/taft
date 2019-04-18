@@ -7,48 +7,17 @@ str.write.rnum:
 	.asciz "%f"
 str.writeln.rnum:
 	.asciz "%f\n"
-bar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-	leave
-	retq
-baz:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	call bar
-	leave
-	retq
-bar2:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-	leave
-	retq
-foo:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $24, %rsp
-	call bar
-	leave
-	retq
-boo:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $40, %rsp
-	leaq str.writeln.inum(%rip), %rdi
-	call _printf
-	leaq str.writeln.inum(%rip), %rdi
-	call _printf
-	leave
-	retq
 main1:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $96, %rsp
-	call boo
-	call foo
+	subq $24, %rsp
+	movq $13, %rax
+	movq $14, %rbx
+	imulq $4, %rbx
+	addq %rbx, %rax
+	movq %rax, %rsi
+	leaq str.writeln.inum(%rip), %rdi
+	call _printf
 	leave
 	retq
 _main:

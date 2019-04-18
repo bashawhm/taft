@@ -88,16 +88,36 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
     // fprintf(taft_asm, "\tmovq %d, %%rsi\n");
     //call func
     if (strcmp(t->left->attribute.nVal->name, "writeln") == 0 && check_tree_type(t->right) == INUM) {
-        fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
-        fprintf(taft_asm, "\tcall _printf\n");
+        if (t->right->type == INUM) {
+            fprintf(taft_asm, "\tmovl $%d, %%esi\n", t->right->attribute.iVal);
+            fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+        } else {
+            fprintf(stderr, "----------------------\n");
+            gen_expr(top, t->right, regs);
+            fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
+            fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+
+        }
         return;
+        
     } else if (strcmp(t->left->attribute.nVal->name, "writeln") == 0 && check_tree_type(t->right) == RNUM) {
         fprintf(taft_asm, "\tleaq str.writeln.rnum(%%rip), %%rdi\n");
         fprintf(taft_asm, "\tcall _printf\n");
         return;
     } else if (strcmp(t->left->attribute.nVal->name, "write") == 0 && check_tree_type(t->right) == INUM) {
-        fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
-        fprintf(taft_asm, "\tcall _printf\n");
+        if (t->right->type == INUM) {
+            fprintf(taft_asm, "\tmovl $%d, %%esi\n", t->right->attribute.iVal);
+            fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+        } else {
+            fprintf(stderr, "----------------------\n");
+            gen_expr(top, t->right, regs);
+            fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
+            fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+        }
         return;
     } else if (strcmp(t->left->attribute.nVal->name, "write") == 0 && check_tree_type(t->right) == RNUM) {
         fprintf(taft_asm, "\tleaq str.write.rnum(%%rip), %%rdi\n");
@@ -111,34 +131,88 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
 //Gen code for expressions
 void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
     if (t == NULL) {
-
+        return;
     }
+    tree_print(t);
+    fprintf(stderr, "\n");
     //If left node (case 0)
     if (t->left == NULL && t->right == NULL && t->label == 1) {
+        fprintf(stderr, "Case 0\n");
         char *name = (char*)malloc(100*sizeof(char));
         if (t->type == ID) {
             if (t->attribute.nVal->array == ARRAY) {
                 return;
             } else {
                 if (t->attribute.nVal->offset != -1) {
-                    sprintf(name, "-%d(%%rbp),%s", ((t->attribute.nVal->offset+1) * 8), regs->reg);
+                    sprintf(name, "-%d(%%rbp), %%%s", ((t->attribute.nVal->offset+1) * 8), regs->reg);
                 } else {
                     sprintf(name, "INVALID OFFSET");
                 }
             }
         } else if (t->type == INUM) {
-            sprintf(name, "$%d,%s", t->attribute.iVal, regs->reg);
+            sprintf(name, "$%d, %%%s", t->attribute.iVal, regs->reg);
         } else if (t->type == RNUM) {
-            sprintf(name, "$%f,%s", t->attribute.rVal, regs->reg);
+            sprintf(name, "$%f, %%%s", t->attribute.rVal, regs->reg);
         } else {
             yyerror("failed to get value");
             exit(-6);
         }
         fprintf(taft_asm, "\tmovq %s\n", name);
+        return;
     }
+    if (t->right != NULL) {
+        //If the right child is a node (Case 1)
+        if (t->right->left == NULL && t->right->right == NULL) {
+            fprintf(stderr, "Case 1\n");
+            gen_expr(top, t->left, regs);
+            char *name = (char*)malloc(100*sizeof(char));
+            if (t->right->type == INUM) {
+                sprintf(name, "$%d, %%%s", t->right->attribute.iVal, regs->reg);
+            } else if (t->right->type == RNUM) {
+                sprintf(name, "$%f, %%%s", t->right->attribute.rVal, regs->reg);
+            } else {
+                yyerror("failed to get value");
+                exit(-7);
+            }
 
-    aux_gen_tree(top, t->left, regs);
-    aux_gen_tree(top, t->right, regs);
+            fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->attribute.opVal), name);
+            return;
+        }
+    }
+    if (t->left != NULL && t->right != NULL) {
+        //If label n1 < label n2 (Case 2)
+        if (t->left->label < t->right->label && t->left->label < NUM_REGISTERS) {
+            fprintf(stderr, "Case 2\n");
+            regs = reg_swap(regs);
+            gen_expr(top, t->right, regs);
+            char *tmp_reg;
+            regs = reg_pop(regs, &tmp_reg);
+            gen_expr(top, t->left, regs);
+            fprintf(taft_asm, "\t%s %%%s, %%%s\n", get_IA64_op(t->attribute.opVal), tmp_reg, regs->reg);
+            reg_push(regs, tmp_reg);
+            regs = reg_swap(regs);
+            return;
+        }
+    
+        //If label n2 <= label n1 (case 3)
+        if (t->right->label <= t->left->label && t->right->label < NUM_REGISTERS) {
+            fprintf(stderr, "Case 3\n");
+            gen_expr(top, t->left, regs);
+            char *tmp_reg;
+            regs = reg_pop(regs, &tmp_reg);
+            gen_expr(top, t->right, regs);
+            fprintf(taft_asm, "\t%s %%%s, %%%s\n", get_IA64_op(t->attribute.opVal), regs->reg, tmp_reg);
+            regs = reg_push(regs, tmp_reg);
+            return;
+        }
+        //Case 4
+        if (t->right->label >= NUM_REGISTERS || t->left->label >= NUM_REGISTERS) {
+            yyerror("used too many registers, bye");
+        }
+    }
+    fprintf(stderr, "Nope\n");
+    gen_expr(top, t->left, regs);
+    gen_expr(top, t->right, regs);
 }
 
 //Gen code for statements
@@ -180,4 +254,21 @@ void gen_func(scope_t *top, tree_t *t, char *name) {
     //Gen function tag and call aux
     gen_tag(name);
     gen_tree(top, t);
+}
+
+char *get_IA64_op(int op) {
+    // fprintf(stderr, "%d\n", op);
+    switch (op) {
+    case PLUS:
+        return "addq";
+    case MINUS:
+        return "subq";
+    case STAR:
+        return "imulq";
+    case SLASH:
+        return "idivq";
+    default:
+        yyerror("Failed to get op");
+        exit(-8);
+    }
 }

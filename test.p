@@ -40,13 +40,15 @@ program main(input, output);
         begin
             x := 3.15; 
             writeln(p+13);
-            writeln(p+13)
+            writeln(p+13);
+            writeln(42)
         end;
 
 begin
     a := 0;
     b := 0;
     boo( foo(13), 3.14, 4);
+    writeln(51);
     if a = 0 then
         a := 5
     else

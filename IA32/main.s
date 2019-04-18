@@ -6,21 +6,19 @@ _main:                                  ## @main
 ## %bb.0:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$16, %rsp
+	xorl	%eax, %eax
 	movl	$0, -4(%rbp)
-	leaq	L_.str(%rip), %rdi
-	movb	$0, %al
-	callq	_printf
-	xorl	%ecx, %ecx
-	movl	%eax, -8(%rbp)          ## 4-byte Spill
+	movl	$5, -8(%rbp)
+	movl	-8(%rbp), %ecx
+	movl	%eax, -12(%rbp)         ## 4-byte Spill
 	movl	%ecx, %eax
-	addq	$16, %rsp
+	cltd
+	movl	$5, %ecx
+	idivl	%ecx
+	movl	%eax, -8(%rbp)
+	movl	-12(%rbp), %eax         ## 4-byte Reload
 	popq	%rbp
 	retq
                                         ## -- End function
-	.section	__TEXT,__cstring,cstring_literals
-L_.str:                                 ## @.str
-	.asciz	"hi\n"
-
 
 .subsections_via_symbols

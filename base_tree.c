@@ -252,7 +252,7 @@ void tree_label(tree_t *t) {
     }
     if (t->left != NULL) {
         //If left node is a leaf
-        if (t->left->left == NULL && t->right->right == NULL) {
+        if (t->left->left == NULL && t->left->right == NULL) {
             t->left->label = 1;
         }
     }
