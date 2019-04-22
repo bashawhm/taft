@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "node.h"
 
-#define NUM_REGISTERS 4
+#define NUM_REGISTERS 5 // Needs to be one higher than the actual because my comparisons are weird
+                        //TODO: Make comparisons not weird
 
 typedef struct tree_s {
     int type;         //Type: INUM RNUM ID RELOP ADDOP MULOP NOT ..

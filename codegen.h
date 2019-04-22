@@ -3,6 +3,8 @@
 #include "base_tree.h"
 #include "scope.h"
 
+#define MAX_OPERAND_LEN 100
+
 FILE *taft_asm;
 
 typedef struct reg_stack_s {

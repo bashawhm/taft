@@ -172,7 +172,9 @@ int scope_get_size(scope_t *top) {
         node_t *tmp = top -> table[i];
         if (tmp != NULL) {
             do {
-                num++;
+                if (tmp->offset != -1) {
+                    num++;
+                }
                 tmp = tmp -> next;
             } while (tmp != NULL);
         }

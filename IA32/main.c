@@ -1,7 +1,10 @@
 #include<stdio.h>
 
+void foo(int a) {
+    printf("%d\n", 43);
+}
+
 int main() {
-    int  x = 5;
-    x = x / 5;
+    printf("d: %d\n", 4+5);
     return 0;
 }
