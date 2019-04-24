@@ -26,14 +26,6 @@ main1:
 	pushq %rbp
 	movq %rsp, %rbp
 	subq $8, %rsp
-	movl $5, %esi
-	leaq str.writeln.inum(%rip), %rdi
-	pushq %rax
-	pushq %rcx
-	movb $0, %al
-	call _printf
-	popq %rcx
-	popq %rax
 	movq $13, %rax
 	movq $14, %rbx
 	imulq $4, %rbx

@@ -34,7 +34,7 @@ program main(input, output);
         foo := 2*b
     end;
 
-    procedure boo( p: integer; q: real; r: integer);
+    procedure boo( p: integer; q: real; r: integer; s: integer);
         var a: real;
         var z: integer;
         begin
@@ -47,7 +47,7 @@ program main(input, output);
 begin
     a := 0;
     b := 0;
-    boo( foo(13), 3.14, 4);
+    boo( foo(13), 3.14, 4, a);
     writeln(51);
     if a = 0 then
         a := 5

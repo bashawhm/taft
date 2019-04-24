@@ -47,7 +47,13 @@ arg_list_t *aux_tree_to_arg_list(tree_t *t, bool called) {
         al -> next = NULL;
         return al;
     }
-    //TODO: If type == ID
+    if (t -> type == ID) {
+        if (t->attribute.nVal->type == INUM || t->attribute.nVal->type == RNUM) {
+            arg_list_t *al = mkarg_list(t->attribute.nVal->type);
+            al -> next = NULL;
+            return al;
+        }
+    }
     arg_list_t *al = aux_tree_to_arg_list(t -> left, called);
     if (al == NULL) {
         return aux_tree_to_arg_list(t -> right, called);

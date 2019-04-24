@@ -95,6 +95,9 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             fprintf(taft_asm, "\tcall _printf\n");
             fprintf(taft_asm, "\tpopq %%rcx\n");
             fprintf(taft_asm, "\tpopq %%rax\n");
+        } else if (t->right->type == ID) {
+            //TODO: Handle variables
+            return;
         } else {
             gen_expr(top, t->right, regs);
             fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
@@ -122,6 +125,9 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             fprintf(taft_asm, "\tcall _printf\n");
             fprintf(taft_asm, "\tpopq %%rcx\n");
             fprintf(taft_asm, "\tpopq %%rax\n");
+        } else if (t->right->type == ID) {
+            //TODO: Handle variables
+            return;
         } else {
             gen_expr(top, t->right, regs);
             fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
