@@ -47,6 +47,7 @@ arg_list_t *aux_tree_to_arg_list(tree_t *t, bool called) {
         al -> next = NULL;
         return al;
     }
+    //TODO: If type == ID
     arg_list_t *al = aux_tree_to_arg_list(t -> left, called);
     if (al == NULL) {
         return aux_tree_to_arg_list(t -> right, called);
@@ -86,7 +87,7 @@ bool check_arg_type(tree_t *t) {
     arg_list_t *tmp = al;
     for (int i = 0; i < t -> left -> attribute.nVal->argc; i++) {
         if (tmp == NULL) {
-            fprintf(stderr, "ERROR: line %d, not enough arguments in call to %s\n", line_num, t->left->attribute.nVal->name);
+            fprintf(stderr, "ERROR: line %d, not enough arguments in call to %s, needed %d\n", line_num, t->left->attribute.nVal->name, t->left->attribute.nVal->argc);
             exit(-3);
         }
         if (tmp -> type != t -> left -> attribute.nVal -> arg_list[i] -> type) {

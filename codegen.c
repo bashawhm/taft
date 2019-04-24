@@ -58,7 +58,6 @@ void gen_prelude() {
 void gen_tail(char *name_main) {
     fprintf(taft_asm, "_main:\n");
     fprintf(taft_asm, "\tcall %s\n", name_main);
-    fprintf(taft_asm, "\tpopq %%rbp\n");
     fprintf(taft_asm, "\tretq\n");
     fclose(taft_asm);
 }

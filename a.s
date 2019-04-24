@@ -47,10 +47,17 @@ main1:
 	popq %rcx
 	popq %rax
 	call MyProcedure
+	movl $4, %esi
+	leaq str.writeln.inum(%rip), %rdi
+	pushq %rax
+	pushq %rcx
+	movb $0, %al
+	call _printf
+	popq %rcx
+	popq %rax
 	addq $8, %rsp
 	pop %rbp
 	retq
 _main:
 	call main1
-	popq %rbp
 	retq

@@ -6,5 +6,6 @@ program main(input, output);
 begin
     writeln(5);
     writeln(13+14*4);
-    MyProcedure(5)
+    MyProcedure(5);
+    writeln(4)
 end.
