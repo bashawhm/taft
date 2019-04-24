@@ -168,6 +168,24 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
         return;
     }
 
+    if (strcmp(t->left->attribute.nVal->name, "read") == 0 && check_tree_type(t->right) == INUM) {
+        if (t->right->type == ID) {
+                fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
+                fprintf(taft_asm, "\tleaq -%d(%%rbp), %%rsi\n", (t->right->attribute.nVal->offset+1)*8);
+                fprintf(taft_asm, "\tpushq %%rax\n");
+                fprintf(taft_asm, "\tpushq %%rcx\n");
+                fprintf(taft_asm, "\tmovb $0, %%al\n");
+                fprintf(taft_asm, "\tcall _scanf\n");
+                fprintf(taft_asm, "\tpopq %%rcx\n");
+                fprintf(taft_asm, "\tpopq %%rax\n");
+        } else {
+            yyerror("Failed to put variable into INUM");
+        }
+        return;
+    } else if (strcmp(t->left->attribute.nVal->name, "read") == 0 && check_tree_type(t->right) == RNUM) {
+        yyerror("REading floating point numbers is not supported");
+    }
+
     fprintf(taft_asm, "\tcall %s\n", t->left->attribute.nVal->name);
 }
 
@@ -210,7 +228,6 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
             if (t->type == FUNCTION_CALL) {
                 gen_func_call(top, t, regs);
                 fprintf(taft_asm, "\tmovq %%rax, %%%s\n", regs->reg);
-                // fprintf(stderr, "\tmovq %%rax, %%%s\n", regs->reg);
                 return;
             }
             gen_expr(top, t->left, regs);

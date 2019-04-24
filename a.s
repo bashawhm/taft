@@ -28,11 +28,6 @@ main1:
 	pushq %rbp
 	movq %rsp, %rbp
 	subq $8, %rsp
-	movq $99, %rbx
-	movq $3, %rcx
-	imulq $47, %rcx
-	addq %rcx, %rbx
-	movq %rbx, -8(%rbp)
 	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
@@ -41,20 +36,14 @@ main1:
 	call _printf
 	popq %rcx
 	popq %rax
-	call foo
-	movq %rax, %rbx
-	movq %rbx, -8(%rbp)
-	movq -8(%rbp), %rsi
-	leaq str.writeln.inum(%rip), %rdi
+	leaq str.write.inum(%rip), %rdi
+	leaq -8(%rbp), %rsi
 	pushq %rax
 	pushq %rcx
 	movb $0, %al
-	call _printf
+	call _scanf
 	popq %rcx
 	popq %rax
-	movq $6, %rbx
-	addq $17, %rbx
-	movq %rbx, -8(%rbp)
 	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax

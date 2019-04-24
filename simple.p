@@ -6,10 +6,7 @@ program main(input, output);
         foo := 5
     end;
 begin
-    x := 99+3*47;
     writeln(x);
-    x := foo(57);
-    writeln(x);
-    x := 6+17;
+    read(x);
     writeln(x)
 end.
