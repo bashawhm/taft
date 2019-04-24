@@ -17,7 +17,7 @@ program main(input, output);
         var t: real;
         var x: array [0..20] of real;
     begin
-        t := 25.5;
+        t := 25.5
         x[5] := x[9] + x[10];
         bar(x[2])
     end;

@@ -1,12 +1,15 @@
 program main(input, output);
     var x: integer;
-    procedure MyProcedure(a: integer);
+    function foo(a: integer): integer;
     begin
-        writeln(43)
+        writeln(43);
+        foo := 5
     end;
 begin
+    x := 99+3*47;
     writeln(x);
-    writeln(13+14*4);
-    MyProcedure(5);
-    writeln(4)
+    x := foo(57);
+    writeln(x);
+    x := 6+17;
+    writeln(x)
 end.

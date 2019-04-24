@@ -7,7 +7,7 @@ str.write.rnum:
 	.asciz "%f"
 str.writeln.rnum:
 	.asciz "%f\n"
-MyProcedure:
+foo:
 	pushq %rbp
 	movq %rsp, %rbp
 	subq $8, %rsp
@@ -19,6 +19,8 @@ MyProcedure:
 	call _printf
 	popq %rcx
 	popq %rax
+	movq $5, %rbx
+	movq %rbx, %rax
 	addq $8, %rsp
 	pop %rbp
 	retq
@@ -26,11 +28,12 @@ main1:
 	pushq %rbp
 	movq %rsp, %rbp
 	subq $8, %rsp
-	movq $13, %rax
-	movq $14, %rbx
-	imulq $4, %rbx
-	addq %rbx, %rax
-	movq %rax, %rsi
+	movq $99, %rbx
+	movq $3, %rcx
+	imulq $47, %rcx
+	addq %rcx, %rbx
+	movq %rbx, -8(%rbp)
+	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
 	pushq %rcx
@@ -38,8 +41,21 @@ main1:
 	call _printf
 	popq %rcx
 	popq %rax
-	call MyProcedure
-	movl $4, %esi
+	call foo
+	movq %rax, %rbx
+	movq %rbx, -8(%rbp)
+	movq -8(%rbp), %rsi
+	leaq str.writeln.inum(%rip), %rdi
+	pushq %rax
+	pushq %rcx
+	movb $0, %al
+	call _printf
+	popq %rcx
+	popq %rax
+	movq $6, %rbx
+	addq $17, %rbx
+	movq %rbx, -8(%rbp)
+	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
 	pushq %rcx

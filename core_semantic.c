@@ -142,7 +142,7 @@ int check_tree_type(tree_t *t) {
     int r_type = -2;
 
     if (t->left != NULL) {
-        if (t->left->type == FUNCTION_CALL || t->left->type == FUNCTION) {
+        if (/*t->left->type == FUNCTION_CALL ||*/ t->left->type == FUNCTION) {
             l_type = t->left->attribute.nVal->ret_type;
         } else if (t->left->type == ID) {
             if (t->left->attribute.nVal->type == FUNCTION) {
@@ -159,7 +159,7 @@ int check_tree_type(tree_t *t) {
     }
 
     if (t->right != NULL) {
-        if (t->right->type == FUNCTION_CALL || t->right->type == FUNCTION) {
+        if (/*t->right->type == FUNCTION_CALL ||*/ t->right->type == FUNCTION) {
             r_type = t->right->attribute.nVal->ret_type;
         } else if (t->right->type == ID) {
             if (t->right->attribute.nVal->type == FUNCTION) {

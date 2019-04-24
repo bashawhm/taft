@@ -8,7 +8,7 @@ x   1.4. Function and procedure names exist in the scope they are defined (and n
 x   1.5. Local objects cease to exist once their scopes cease to exist
 
 2. Semantic rules for Expressions
-   2.1. Expressions return typed-values
+?   2.1. Expressions return typed-values
 x   2.2. Objects must be declared before they used in expressions
 x   2.3. Objects of different types cannot appear in the same expression (no type promotions)
 
@@ -31,7 +31,7 @@ x   5.3. Functions must accept exactly the same number of arguments as is
    5.4. Functions are not allowed to update the value of nonlocal objects (via assignment statements)
 
 6. Semantic rules for Procedures
-   6.1. Procedure calls do not return values
+x   6.1. Procedure calls do not return values
 x   6.2. Procedures must accept exactly the same number of arguments as is 
         declared in its header, with the correct sequence of types
 
