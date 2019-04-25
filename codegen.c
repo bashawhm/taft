@@ -183,7 +183,7 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
         }
         return;
     } else if (strcmp(t->left->attribute.nVal->name, "read") == 0 && check_tree_type(t->right) == RNUM) {
-        yyerror("REading floating point numbers is not supported");
+        yyerror("Reading floating point numbers is not supported");
     }
 
     fprintf(taft_asm, "\tcall %s\n", t->left->attribute.nVal->name);

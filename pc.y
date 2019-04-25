@@ -9,6 +9,7 @@
 #include "y.tab.h"
 
 extern int yyerror(char*);
+extern FILE *yyin;
 extern int yylex();
 extern int line_num;
 
@@ -244,7 +245,11 @@ factor
 
 %%
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc > 1) {
+        FILE *file = fopen(argv[1], "r");
+        yyin = file;
+    }
     yyparse();
     return 0;
 }

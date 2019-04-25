@@ -132,7 +132,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "pc.y"
+#line 19 "pc.y"
 {
     int iVal;    /* INUM */
     float rVal;  /* RNUM */
