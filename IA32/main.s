@@ -13,9 +13,13 @@ _main:                                  ## @main
 	leaq	-16(%rbp), %rsi
 	movb	$0, %al
 	callq	_scanf
-	xorl	%ecx, %ecx
+	cmpq	$5, -16(%rbp)
 	movl	%eax, -20(%rbp)         ## 4-byte Spill
-	movl	%ecx, %eax
+	jge	LBB0_2
+## %bb.1:
+	movq	$-10, -16(%rbp)
+LBB0_2:
+	xorl	%eax, %eax
 	addq	$32, %rsp
 	popq	%rbp
 	retq

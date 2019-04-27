@@ -10,6 +10,7 @@
 extern int yyerror(char*);
 
 extern FILE *taft_asm;
+int label = 0;
 
 reg_stack_t *mkreg_stack(char *reg) {
     reg_stack_t *s = (reg_stack_t*)malloc(sizeof(reg_stack_t));
@@ -47,9 +48,10 @@ reg_stack_t *reg_swap(reg_stack_t *top) {
 void gen_prelude() {
     taft_asm = fopen("a.s", "w");
     fprintf(taft_asm, "\t.globl _main\n");
+    fprintf(taft_asm, "\t.p2align 4\n");
     //Gen stuff (formatting) for write and writeln as well as read
-    fprintf(taft_asm, "str.write.inum:\n\t.asciz \"%%d\"\n");
-    fprintf(taft_asm, "str.writeln.inum:\n\t.asciz \"%%d\\n\"\n");
+    fprintf(taft_asm, "str.write.inum:\n\t.asciz \"%%ld\"\n");
+    fprintf(taft_asm, "str.writeln.inum:\n\t.asciz \"%%ld\\n\"\n");
 
     fprintf(taft_asm, "str.write.rnum:\n\t.asciz \"%%f\"\n");
     fprintf(taft_asm, "str.writeln.rnum:\n\t.asciz \"%%f\\n\"\n");
@@ -87,7 +89,7 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
     //call func
     if (strcmp(t->left->attribute.nVal->name, "writeln") == 0 && check_tree_type(t->right) == INUM) {
         if (t->right->type == INUM) {
-            fprintf(taft_asm, "\tmovl $%d, %%esi\n", t->right->attribute.iVal);
+            fprintf(taft_asm, "\tmovq $%d, %%rsi\n", t->right->attribute.iVal);
             fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
             fprintf(taft_asm, "\tpushq %%rax\n");
             fprintf(taft_asm, "\tpushq %%rcx\n");
@@ -128,7 +130,7 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
         return;
     } else if (strcmp(t->left->attribute.nVal->name, "write") == 0 && check_tree_type(t->right) == INUM) {
         if (t->right->type == INUM) {
-            fprintf(taft_asm, "\tmovl $%d, %%esi\n", t->right->attribute.iVal);
+            fprintf(taft_asm, "\tmovq $%d, %%rsi\n", t->right->attribute.iVal);
             fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
             fprintf(taft_asm, "\tpushq %%rax\n");
             fprintf(taft_asm, "\tpushq %%rcx\n");
@@ -189,13 +191,36 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
     fprintf(taft_asm, "\tcall %s\n", t->left->attribute.nVal->name);
 }
 
+void gen_if(scope_t *top, tree_t *t, reg_stack_t *regs) {
+    if (t == NULL) {
+        return;
+    }
+    if (t->left->type != RELOP) {
+        yyerror("if operand not relop");
+    }
+    gen_expr(top, t->left->right, regs);
+    char *buff;
+    regs = reg_pop(regs, &buff);
+    gen_expr(top, t->left->left, regs);
+    fprintf(taft_asm, "\tcmpq %%%s, %%%s\n", buff, regs->reg);
+    regs = reg_push(regs, buff);
+    char op[MAX_OPERAND_LEN];
+    sprintf(op, "LB%d", label);
+    label++;
+    fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->left->attribute.opVal), op);
+    fprintf(taft_asm, "##if\n");
+    aux_gen_tree(top, t->right, regs);
+    fprintf(taft_asm, "%s:\n", op);
+    //TODO: Else statements
+}
+
 //Gen code for expressions
 void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
     if (t == NULL) {
         return;
     }
     // fprintf(stderr, "type: %d\n", t->type);
-    //TODO: if function call mixed in handle that
+    //TODO: if function call mixed into expression, done?
     //If left node (case 0)
     if (t->left == NULL && t->right == NULL /*&& t->label == 1*/) {
         // fprintf(stderr, "case 0\n");
@@ -310,6 +335,11 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
         return;
     }
 
+    if (t->type == IF) {
+        gen_if(top, t, regs);
+        return;
+    }
+
     aux_gen_tree(top, t->left, regs);
     aux_gen_tree(top, t->right, regs);
 
@@ -352,7 +382,6 @@ void gen_func(scope_t *top, tree_t *t, char *name) {
 }
 
 char *get_IA64_op(int op) {
-    // fprintf(stderr, "%d\n", op);
     switch (op) {
     case PLUS:
         return "addq";
@@ -362,6 +391,18 @@ char *get_IA64_op(int op) {
         return "imulq";
     case SLASH:
         return "idivq";
+    case LT:
+        return "jge";
+    case GT:
+        return "jle";
+    case GE:
+        return "jl";
+    case LE:
+        return "jg";
+    case EQ:
+        return "jne";
+    case NE:
+        return "je";
     default: {
         char err[MAX_OPERAND_LEN];
         sprintf(err, "Failed to get op: %d", op);

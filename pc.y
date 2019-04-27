@@ -193,9 +193,9 @@ statement
     : variable ASSIGNOP expression  { $$ = mktree(ASSIGNOP, $1, $3); check_tree_type($$); }
     | procedure_statement   { $$ = $1; }
     | compound_statement    { $$ = $1; }
-    | IF expression THEN statement  { $$ = mktree(IF, $2, mktree(THEN, $4, NULL)); }
-    | IF expression THEN statement ELSE statement  { $$ = mktree(IF, $2, mktree(THEN, $4, $6)); }
-    | WHILE expression DO statement  { $$ = mktree(WHILE, $2, $4); }
+    | IF expression THEN statement  { $$ = mktree(IF, $2, mktree(THEN, $4, NULL)); check_relop($2); }
+    | IF expression THEN statement ELSE statement  { $$ = mktree(IF, $2, mktree(THEN, $4, $6)); check_relop($2); }
+    | WHILE expression DO statement  { $$ = mktree(WHILE, $2, $4); check_relop($2); }
     ;
 
 variable

@@ -1,8 +1,9 @@
 	.globl _main
+	.p2align 4
 str.write.inum:
-	.asciz "%d"
+	.asciz "%ld"
 str.writeln.inum:
-	.asciz "%d\n"
+	.asciz "%ld\n"
 str.write.rnum:
 	.asciz "%f"
 str.writeln.rnum:
@@ -19,6 +20,20 @@ main1:
 	call _scanf
 	popq %rcx
 	popq %rax
+	movq $5, %rbx
+	movq -8(%rbp), %rcx
+	cmpq %rbx, %rcx
+	jge LB0
+##if
+	movq $-10, %rsi
+	leaq str.writeln.inum(%rip), %rdi
+	pushq %rax
+	pushq %rcx
+	movb $0, %al
+	call _printf
+	popq %rcx
+	popq %rax
+LB0:
 	movq -8(%rbp), %rbx
 	imulq $10, %rbx
 	movq %rbx, %rsi

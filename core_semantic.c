@@ -6,6 +6,7 @@
 #include "y.tab.h"
 
 extern int line_num;
+extern int yyerror(char*);
 
 void tree_to_args(node_t *n, tree_t *args) {
     assert(n != NULL);
@@ -198,4 +199,24 @@ void check_array_index(tree_t *t) {
         fprintf(stderr, "ERROR: line %d, must index and array with an integer\n", line_num);
         exit(-6);
     }
+}
+
+bool check_relop(tree_t *t) {
+    if (t == NULL) {
+        return false;
+    }
+    if (t->type == RELOP) {
+        return true;
+    }
+    bool test = false;
+    test = test || check_relop(t->left);
+    if (test) {
+        return true;
+    }
+    test = test || check_relop(t->right);
+    if (test) {
+        return true;
+    }
+    yyerror("No relop in condition");
+    return false;
 }

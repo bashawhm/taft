@@ -63,6 +63,7 @@ ident       [A-Za-z][A-Za-z0-9]*
 
 
 {number}            {/*fprintf(stderr, "[INUM;%d]", yylval.iVal = atoi(yytext));*/ yylval.iVal = atoi(yytext);  return INUM; }
+-{number}            {/*fprintf(stderr, "[INUM;%d]", yylval.iVal = atoi(yytext));*/ yylval.iVal = atoi(yytext);  return INUM; }
 {number}"."{number} {/*fprintf(stderr, "[RNUM;%f]", yylval.rVal = atof(yytext));*/ yylval.rVal = atof(yytext); return RNUM; }
 {ident}             {/*fprintf(stderr, "[ID;%s]", yytext);*/ yylval.sVal = strdup(yytext); return ID; }
 

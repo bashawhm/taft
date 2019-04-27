@@ -1681,17 +1681,17 @@ yyreduce:
 
   case 31:
 #line 196 "pc.y"
-    { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (4)].tVal), mktree(THEN, (yyvsp[(4) - (4)].tVal), NULL)); }
+    { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (4)].tVal), mktree(THEN, (yyvsp[(4) - (4)].tVal), NULL)); check_relop((yyvsp[(2) - (4)].tVal)); }
     break;
 
   case 32:
 #line 197 "pc.y"
-    { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (6)].tVal), mktree(THEN, (yyvsp[(4) - (6)].tVal), (yyvsp[(6) - (6)].tVal))); }
+    { (yyval.tVal) = mktree(IF, (yyvsp[(2) - (6)].tVal), mktree(THEN, (yyvsp[(4) - (6)].tVal), (yyvsp[(6) - (6)].tVal))); check_relop((yyvsp[(2) - (6)].tVal)); }
     break;
 
   case 33:
 #line 198 "pc.y"
-    { (yyval.tVal) = mktree(WHILE, (yyvsp[(2) - (4)].tVal), (yyvsp[(4) - (4)].tVal)); }
+    { (yyval.tVal) = mktree(WHILE, (yyvsp[(2) - (4)].tVal), (yyvsp[(4) - (4)].tVal)); check_relop((yyvsp[(2) - (4)].tVal)); }
     break;
 
   case 34:
