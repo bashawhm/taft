@@ -1,11 +1,12 @@
 #include<stdio.h>
+#include<stdlib.h>
 
 int main() {
-    long x = 0;
-    scanf("%ld", &x);
+    int x = 0;
     if (x < 5) {
-        x = -10;
+        x = 6;
+    } else {
+        x = 7;
     }
-    
-    return 0;
+
 }

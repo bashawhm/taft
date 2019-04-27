@@ -204,14 +204,23 @@ void gen_if(scope_t *top, tree_t *t, reg_stack_t *regs) {
     gen_expr(top, t->left->left, regs);
     fprintf(taft_asm, "\tcmpq %%%s, %%%s\n", buff, regs->reg);
     regs = reg_push(regs, buff);
-    char op[MAX_OPERAND_LEN];
-    sprintf(op, "LB%d", label);
+    char lab1[MAX_OPERAND_LEN];
+    char lab2[MAX_OPERAND_LEN];
+    sprintf(lab1, "LB%d", label);
     label++;
-    fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->left->attribute.opVal), op);
+    sprintf(lab2, "LB%d", label);
+    label++;
+    fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->left->attribute.opVal), lab1);
     fprintf(taft_asm, "##if\n");
-    aux_gen_tree(top, t->right, regs);
-    fprintf(taft_asm, "%s:\n", op);
-    //TODO: Else statements
+    aux_gen_tree(top, t->right->left, regs);
+    if (t->right->right != NULL) {
+        fprintf(taft_asm, "\tjmp %s\n", lab2);
+    }
+    fprintf(taft_asm, "%s:\n", lab1);
+    if (t->right->right != NULL) {
+        aux_gen_tree(top, t->right->right, regs);
+        fprintf(taft_asm, "%s:\n", lab2);
+    }
 }
 
 //Gen code for expressions

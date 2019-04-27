@@ -33,10 +33,18 @@ main1:
 	call _printf
 	popq %rcx
 	popq %rax
+	jmp LB1
 LB0:
-	movq -8(%rbp), %rbx
-	imulq $10, %rbx
-	movq %rbx, %rsi
+	movq $10, %rsi
+	leaq str.writeln.inum(%rip), %rdi
+	pushq %rax
+	pushq %rcx
+	movb $0, %al
+	call _printf
+	popq %rcx
+	popq %rax
+LB1:
+	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
 	pushq %rcx

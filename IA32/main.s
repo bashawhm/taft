@@ -6,27 +6,19 @@ _main:                                  ## @main
 ## %bb.0:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$32, %rsp
 	movl	$0, -4(%rbp)
-	movq	$0, -16(%rbp)
-	leaq	L_.str(%rip), %rdi
-	leaq	-16(%rbp), %rsi
-	movb	$0, %al
-	callq	_scanf
-	cmpq	$5, -16(%rbp)
-	movl	%eax, -20(%rbp)         ## 4-byte Spill
+	movl	$0, -8(%rbp)
+	cmpl	$5, -8(%rbp)
 	jge	LBB0_2
 ## %bb.1:
-	movq	$-10, -16(%rbp)
+	movl	$6, -8(%rbp)
+	jmp	LBB0_3
 LBB0_2:
-	xorl	%eax, %eax
-	addq	$32, %rsp
+	movl	$7, -8(%rbp)
+LBB0_3:
+	movl	-4(%rbp), %eax
 	popq	%rbp
 	retq
                                         ## -- End function
-	.section	__TEXT,__cstring,cstring_literals
-L_.str:                                 ## @.str
-	.asciz	"%ld"
-
 
 .subsections_via_symbols

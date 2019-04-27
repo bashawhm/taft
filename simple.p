@@ -3,6 +3,8 @@ program main(input, output);
 begin
     read(x);
     if x < 5 then
-        writeln(-10);
-    writeln(x*10)
+        writeln(-10)
+    else 
+        writeln(10);
+    writeln(x)
 end.
