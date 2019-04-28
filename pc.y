@@ -51,7 +51,7 @@ scope_t *scope;
 %token <iVal> INUM 
 %token <rVal> RNUM
 %token VAR
-%token IF THEN ELSE WHILE DO
+%token IF THEN ELSE WHILE FOR DO
 %nonassoc THEN
 %nonassoc ELSE
 
@@ -196,6 +196,7 @@ statement
     | IF expression THEN statement  { $$ = mktree(IF, $2, mktree(THEN, $4, NULL)); check_relop($2); }
     | IF expression THEN statement ELSE statement  { $$ = mktree(IF, $2, mktree(THEN, $4, $6)); check_relop($2); }
     | WHILE expression DO statement  { $$ = mktree(WHILE, $2, $4); check_relop($2); }
+    | FOR statement ';' expression ';' statement DO statement  { $$ = mktree(FOR, mktree(COMMA, $2, mktree(COMMA, $4, $6)), $8); check_relop($4); }
     ;
 
 variable

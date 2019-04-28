@@ -75,12 +75,13 @@
      THEN = 291,
      ELSE = 292,
      WHILE = 293,
-     DO = 294,
-     ARRAY_ACCESS = 295,
-     FUNCTION_CALL = 296,
-     PROCEDURE_CALL = 297,
-     COMMA = 298,
-     SEMICOLON = 299
+     FOR = 294,
+     DO = 295,
+     ARRAY_ACCESS = 296,
+     FUNCTION_CALL = 297,
+     PROCEDURE_CALL = 298,
+     COMMA = 299,
+     SEMICOLON = 300
    };
 #endif
 /* Tokens.  */
@@ -120,12 +121,13 @@
 #define THEN 291
 #define ELSE 292
 #define WHILE 293
-#define DO 294
-#define ARRAY_ACCESS 295
-#define FUNCTION_CALL 296
-#define PROCEDURE_CALL 297
-#define COMMA 298
-#define SEMICOLON 299
+#define FOR 294
+#define DO 295
+#define ARRAY_ACCESS 296
+#define FUNCTION_CALL 297
+#define PROCEDURE_CALL 298
+#define COMMA 299
+#define SEMICOLON 300
 
 
 
@@ -143,7 +145,7 @@ typedef union YYSTYPE
     tree_t *tVal;
 }
 /* Line 1529 of yacc.c.  */
-#line 147 "y.tab.h"
+#line 149 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

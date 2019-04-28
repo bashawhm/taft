@@ -38,6 +38,7 @@ ident       [A-Za-z][A-Za-z0-9]*
 "then"             {/*fprintf(stderr, "[THEN]");*/ return THEN; }
 "else"             {/*fprintf(stderr, "[ELSE]");*/ return ELSE; }
 "while"            {/*fprintf(stderr, "[WHILE]");*/ return WHILE; }
+"for"              {/*fprintf(stderr, "[FOR]");*/ return FOR; }
 "do"               {/*fprintf(stderr, "[DO]");*/ return DO; }
 
 ".."               {/*fprintf(stderr, "[DOTDOT]");*/ return DOTDOT; }

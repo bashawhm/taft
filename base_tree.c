@@ -219,6 +219,10 @@ void aux_tree_print(tree_t *t, int spaces) {
         fprintf(stderr, "[WHILE]\n");
         break;
     }
+    case FOR: {
+        fprintf(stderr, "[FOR]\n");
+        break;
+    }
     case ASSIGNOP: {
         fprintf(stderr, "[ASSIGNOP]\n");
         break;

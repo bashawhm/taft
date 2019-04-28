@@ -98,7 +98,6 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             fprintf(taft_asm, "\tpopq %%rcx\n");
             fprintf(taft_asm, "\tpopq %%rax\n");
         } else if (t->right->type == ID) {
-            //TODO: Handle variables
             if (t->right->attribute.nVal->type == INUM) {
                 fprintf(taft_asm, "\tmovq -%d(%%rbp), %%rsi\n", (t->right->attribute.nVal->offset+1)*8);
                 fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
@@ -139,7 +138,6 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             fprintf(taft_asm, "\tpopq %%rcx\n");
             fprintf(taft_asm, "\tpopq %%rax\n");
         } else if (t->right->type == ID) {
-            //TODO: Handle variables
             if (t->right->attribute.nVal->type == INUM) {
                 fprintf(taft_asm, "\tmovq -%d(%%rbp), %%rsi\n", (t->right->attribute.nVal->offset+1)*8);
                 fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
@@ -246,6 +244,33 @@ void gen_while(scope_t *top, tree_t *t, reg_stack_t *regs) {
     regs = reg_push(regs, buff);
     fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->left->attribute.opVal), lab2);
     aux_gen_tree(top, t->right, regs);
+    fprintf(taft_asm, "\tjmp %s\n", lab1);
+    fprintf(taft_asm, "%s:\n", lab2);
+}
+
+void gen_for(scope_t *top, tree_t *t, reg_stack_t *regs) {
+    if (t == NULL) {
+        return;
+    }
+    aux_gen_tree(top, t->left->left, regs);
+    char lab1[MAX_OPERAND_LEN];
+    sprintf(lab1, "LB%d", label);
+    label++;
+    fprintf(taft_asm, "%s:\n", lab1);
+
+    char lab2[MAX_OPERAND_LEN];
+    sprintf(lab2, "LB%d", label);
+    label++;
+    gen_expr(top, t->left->right->left->right, regs);
+    char *buff;
+    regs = reg_pop(regs, &buff);
+    gen_expr(top, t->left->right->left->left, regs);
+    fprintf(taft_asm, "\tcmpq %%%s, %%%s\n", buff, regs->reg);
+    regs = reg_push(regs, buff);
+    fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->left->right->left->attribute.opVal), lab2);
+
+    aux_gen_tree(top, t->right, regs);
+    aux_gen_tree(top, t->left->right->right, regs);
     fprintf(taft_asm, "\tjmp %s\n", lab1);
     fprintf(taft_asm, "%s:\n", lab2);
 }
@@ -377,6 +402,10 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
     }
     if (t->type == WHILE) {
         gen_while(top, t, regs);
+        return;
+    }
+    if (t->type == FOR) {
+        gen_for(top, t, regs);
         return;
     }
 
