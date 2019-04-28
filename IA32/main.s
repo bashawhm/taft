@@ -8,13 +8,14 @@ _main:                                  ## @main
 	movq	%rsp, %rbp
 	movl	$0, -4(%rbp)
 	movl	$0, -8(%rbp)
-	cmpl	$5, -8(%rbp)
-	jge	LBB0_2
-## %bb.1:
-	movl	$6, -8(%rbp)
-	jmp	LBB0_3
-LBB0_2:
-	movl	$7, -8(%rbp)
+LBB0_1:                                 ## =>This Inner Loop Header: Depth=1
+	cmpl	$10, -8(%rbp)
+	jge	LBB0_3
+## %bb.2:                               ##   in Loop: Header=BB0_1 Depth=1
+	movl	-8(%rbp), %eax
+	addl	$1, %eax
+	movl	%eax, -8(%rbp)
+	jmp	LBB0_1
 LBB0_3:
 	movl	-4(%rbp), %eax
 	popq	%rbp

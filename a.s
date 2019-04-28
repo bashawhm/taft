@@ -20,12 +20,12 @@ main1:
 	call _scanf
 	popq %rcx
 	popq %rax
-	movq $5, %rbx
+LB0:
+	movq $0, %rbx
 	movq -8(%rbp), %rcx
 	cmpq %rbx, %rcx
-	jge LB0
-##if
-	movq $-10, %rsi
+	jle LB1
+	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
 	pushq %rcx
@@ -33,16 +33,10 @@ main1:
 	call _printf
 	popq %rcx
 	popq %rax
-	jmp LB1
-LB0:
-	movq $10, %rsi
-	leaq str.writeln.inum(%rip), %rdi
-	pushq %rax
-	pushq %rcx
-	movb $0, %al
-	call _printf
-	popq %rcx
-	popq %rax
+	movq -8(%rbp), %rbx
+	subq $1, %rbx
+	movq %rbx, -8(%rbp)
+	jmp LB0
 LB1:
 	movq -8(%rbp), %rsi
 	leaq str.writeln.inum(%rip), %rdi

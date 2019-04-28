@@ -173,7 +173,7 @@ parameter_list
 
 
 compound_statement
-    : BBEGIN optional_statements END  
+    : BBEGIN optional_statements END
     { 
         $$ = $2; 
     }

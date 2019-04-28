@@ -3,10 +3,7 @@
 
 int main() {
     int x = 0;
-    if (x < 5) {
-        x = 6;
-    } else {
-        x = 7;
+    while (x < 10) {
+        x++;
     }
-
 }
