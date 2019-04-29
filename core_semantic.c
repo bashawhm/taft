@@ -88,7 +88,7 @@ bool check_arg_type(tree_t *t) {
     if (t == NULL) {
         return true;
     }
-    fprintf(stderr, "type: %d\n", t->type);
+    // fprintf(stderr, "type: %d\n", t->type);
     assert(t -> type == FUNCTION_CALL || t -> type == PROCEDURE_CALL);
     arg_list_t *al = tree_to_arg_list(t);
     // arg_list_print(al);

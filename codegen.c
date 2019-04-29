@@ -322,7 +322,18 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 sprintf(name, "$%d, %%%s", t->right->attribute.iVal, regs->reg);
             } else if (t->right->type == RNUM) {
                 sprintf(name, "$%f, %%%s", t->right->attribute.rVal, regs->reg);
+            } else if (t->right->type == ID) {
+                if (t->right->attribute.nVal->array == ARRAY) {
+                    return;
+                } else {
+                    if (t->right->attribute.nVal->offset != -1) {
+                        sprintf(name, "-%d(%%rbp), %%%s", ((t->right->attribute.nVal->offset+1) * 8), regs->reg);
+                    } else {
+                        sprintf(name, "INVALID OFFSET");
+                    }
+                }
             } else {
+                fprintf(stderr, "type: %d\n", t -> right -> type);
                 yyerror("failed to get value");
                 exit(-7);
             }
@@ -429,13 +440,21 @@ void gen_tree(scope_t *top, tree_t *t) {
     fprintf(taft_asm, "\tpushq %%rbp\n");
     fprintf(taft_asm, "\tmovq %%rsp, %%rbp\n");
     if (scope_get_size(top) > 1) { //TODO: Probably want to keep 16 byte allighnment on all odd number values
-        fprintf(taft_asm, "\tsubq $%d, %%rsp\n", 8*scope_get_size(top));
+        if (scope_get_size(top) % 2 == 0)  {
+            fprintf(taft_asm, "\tsubq $%d, %%rsp\n", (8*scope_get_size(top)) + 8);
+        } else {
+            fprintf(taft_asm, "\tsubq $%d, %%rsp\n", (8*scope_get_size(top)));
+        }
     } else {
         fprintf(taft_asm, "\tsubq $8, %%rsp\n");
     }
     aux_gen_tree(top, t, regs);
     if (scope_get_size(top) > 1) {
-        fprintf(taft_asm, "\taddq $%d, %%rsp\n", 8*scope_get_size(top));
+        if (scope_get_size(top) % 2 == 0) {
+            fprintf(taft_asm, "\taddq $%d, %%rsp\n", (8*scope_get_size(top))+8);
+        } else {
+            fprintf(taft_asm, "\taddq $%d, %%rsp\n", 8*scope_get_size(top));
+        }
     } else {
         fprintf(taft_asm, "\taddq $8, %%rsp\n");
     }
