@@ -6,25 +6,31 @@ _main:                                  ## @main
 ## %bb.0:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movl	$0, -4(%rbp)
-	movl	$0, -8(%rbp)
-	movl	$0, -8(%rbp)
-LBB0_1:                                 ## =>This Inner Loop Header: Depth=1
-	cmpl	$5, -8(%rbp)
-	jge	LBB0_4
-## %bb.2:                               ##   in Loop: Header=BB0_1 Depth=1
-	movl	-8(%rbp), %eax
-	addl	$1, %eax
-	movl	%eax, -8(%rbp)
-## %bb.3:                               ##   in Loop: Header=BB0_1 Depth=1
-	movl	-8(%rbp), %eax
-	addl	$1, %eax
-	movl	%eax, -8(%rbp)
-	jmp	LBB0_1
-LBB0_4:
-	movl	-4(%rbp), %eax
+	subq	$48, %rsp
+	movq	___stack_chk_guard@GOTPCREL(%rip), %rax
+	movq	(%rax), %rax
+	movq	%rax, -8(%rbp)
+	movl	$0, -36(%rbp)
+	movl	$2, -40(%rbp)
+	movl	$1, -44(%rbp)
+	movl	-40(%rbp), %ecx
+	addl	-44(%rbp), %ecx
+	movslq	%ecx, %rax
+	movl	-32(%rbp,%rax,4), %ecx
+	movl	%ecx, -48(%rbp)
+	movq	___stack_chk_guard@GOTPCREL(%rip), %rax
+	movq	(%rax), %rax
+	movq	-8(%rbp), %rdx
+	cmpq	%rdx, %rax
+	jne	LBB0_2
+## %bb.1:
+	xorl	%eax, %eax
+	addq	$48, %rsp
 	popq	%rbp
 	retq
+LBB0_2:
+	callq	___stack_chk_fail
+	ud2
                                         ## -- End function
 
 .subsections_via_symbols

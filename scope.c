@@ -173,7 +173,11 @@ int scope_get_size(scope_t *top) {
         if (tmp != NULL) {
             do {
                 if (tmp->offset != -1) {
-                    num++;
+                    if (tmp->array == ARRAY) {
+                        num += (tmp->r_bound - tmp->l_bound);
+                    } else {
+                        num++;
+                    }
                 }
                 tmp = tmp -> next;
             } while (tmp != NULL);

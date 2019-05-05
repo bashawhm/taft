@@ -2,8 +2,11 @@
 #include<stdlib.h>
 
 int main() {
-    int x = 0;
-    for (x = 0; x < 5; x++) {
-        x += 1;
-    }
+    int a[5];
+    int x = 2;
+    int y = 1;
+    int c;
+    c = a[x+y];
+    return 0;
+
 }

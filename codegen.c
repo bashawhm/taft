@@ -75,8 +75,14 @@ void gen_offset(scope_t *top) {
         if (tmp != NULL) {
             do {
                 if (tmp->type == INUM || tmp->type == RNUM) {
-                    tmp->offset = offset;
-                    offset++;
+                    if (tmp->offset == -1) {
+                        tmp->offset = offset;
+                        if (tmp->array == ARRAY) {
+                            offset += (tmp->r_bound - tmp->l_bound);
+                        } else {
+                            offset++;
+                        }
+                    }
                 }
                 tmp = tmp -> next;
             } while (tmp != NULL);
@@ -86,6 +92,7 @@ void gen_offset(scope_t *top) {
 
 void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
     //Gen args
+    //TODO: Handle function arguments
     //call func
     if (strcmp(t->left->attribute.nVal->name, "writeln") == 0 && check_tree_type(t->right) == INUM) {
         if (t->right->type == INUM) {
@@ -281,7 +288,6 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
         return;
     }
     // fprintf(stderr, "type: %d\n", t->type);
-    //TODO: if function call mixed into expression, done?
     //If left node (case 0)
     if (t->left == NULL && t->right == NULL /*&& t->label == 1*/) {
         // fprintf(stderr, "case 0\n");
@@ -316,6 +322,21 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 fprintf(taft_asm, "\tmovq %%rax, %%%s\n", regs->reg);
                 return;
             }
+            if (t->type == ARRAY_ACCESS) {
+                if (t->right->type == INUM) {
+                    fprintf(taft_asm, "\tmovq %%%s, -%d(%%rbp)\n", regs->reg, (t->left->attribute.nVal->offset+(t->right->attribute.iVal)+1)*8);
+                } else {
+                    //TODO: handle variable and expression indexing
+                    char *tmp_reg;
+                    regs = reg_pop(regs, &tmp_reg);
+                    gen_expr(top, t->right, regs);
+                    fprintf(taft_asm, "\taddq $%d, %%%s\n", t->left->attribute.nVal->offset+1, regs->reg);
+                    fprintf(taft_asm, "\timulq $%d, %%%s\n", -1, regs->reg);
+                    fprintf(taft_asm, "\tmovq %%%s, (%%rbp, %%%s, 8)\n", tmp_reg, regs->reg);
+                    regs = reg_push(regs, tmp_reg);
+                }
+                return;
+            }
             gen_expr(top, t->left, regs);
             char *name = (char*)malloc(MAX_OPERAND_LEN*sizeof(char));
             if (t->right->type == INUM) {
@@ -337,7 +358,6 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 yyerror("failed to get value");
                 exit(-7);
             }
-
             fprintf(taft_asm, "\t%s %s\n", get_IA64_op(t->attribute.opVal), name);
             return;
         }
@@ -394,7 +414,21 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
     }
 
     if (t -> type == ASSIGNOP) {
-        gen_expr(top, t->right, regs);
+        if (t->right->type == ARRAY_ACCESS) {
+            if (t->right->right->type == INUM) {
+                fprintf(taft_asm, "\tmovq -%d(%%rbp), %%%s\n", (t->right->left->attribute.nVal->offset+(t->right->right->attribute.iVal)+1)*8, regs->reg);
+            } else {
+                char *tmp_reg;
+                regs = reg_pop(regs, &tmp_reg);
+                gen_expr(top, t->right->right, regs);
+                fprintf(taft_asm, "\taddq $%d, %%%s\n", t->right->left->attribute.nVal->offset+1, regs->reg);
+                fprintf(taft_asm, "\timulq $%d, %%%s\n", -1, regs->reg);
+                fprintf(taft_asm, "\tmovq (%%rbp, %%%s, 8), %%%s\n",  regs->reg, tmp_reg);
+                regs = reg_push(regs, tmp_reg);
+            }
+        } else {
+            gen_expr(top, t->right, regs);
+        }
         if (t->left->type == ID) {
             if (t->left->attribute.nVal->type == FUNCTION) {
                 //Function return
@@ -404,6 +438,10 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
             }
         }
         aux_gen_tree(top, t->left, regs);
+        return;
+    }
+    if (t->type == ARRAY_ACCESS) {
+        gen_expr(top, t,  regs);
         return;
     }
 
@@ -436,10 +474,9 @@ void gen_tree(scope_t *top, tree_t *t) {
     reg_stack_t *regs = mkreg_stack("rbx");
     regs->next = mkreg_stack("rcx");
     regs->next->next = mkreg_stack("rdx");
-    // regs->next->next->next = mkreg_stack("rsi");
     fprintf(taft_asm, "\tpushq %%rbp\n");
     fprintf(taft_asm, "\tmovq %%rsp, %%rbp\n");
-    if (scope_get_size(top) > 1) { //TODO: Probably want to keep 16 byte allighnment on all odd number values
+    if (scope_get_size(top) > 1) {
         if (scope_get_size(top) % 2 == 0)  {
             fprintf(taft_asm, "\tsubq $%d, %%rsp\n", (8*scope_get_size(top)) + 8);
         } else {

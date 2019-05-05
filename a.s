@@ -11,50 +11,24 @@ str.writeln.rnum:
 main1:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $40, %rsp
+	subq $56, %rsp
 	movq $0, %rbx
-	movq %rbx, -8(%rbp)
-	movq $1, %rbx
-	movq %rbx, -16(%rbp)
-	leaq str.write.inum(%rip), %rdi
-	leaq -24(%rbp), %rsi
-	pushq %rax
-	pushq %rcx
-	movb $0, %al
-	call _scanf
-	popq %rcx
-	popq %rax
-	movq $0, %rsi
-	leaq str.writeln.inum(%rip), %rdi
-	pushq %rax
-	pushq %rcx
-	movb $0, %al
-	call _printf
-	popq %rcx
-	popq %rax
-	movq $1, %rsi
-	leaq str.writeln.inum(%rip), %rdi
-	pushq %rax
-	pushq %rcx
-	movb $0, %al
-	call _printf
-	popq %rcx
-	popq %rax
-	movq $2, %rbx
-	movq %rbx, -32(%rbp)
+	movq %rbx, -48(%rbp)
 LB0:
-	movq -24(%rbp), %rbx
-	movq -32(%rbp), %rcx
+	movq $5, %rbx
+	movq -48(%rbp), %rcx
 	cmpq %rbx, %rcx
 	jge LB1
-	movq -8(%rbp), %rbx
-	addq -16(%rbp), %rbx
-	movq %rbx, -40(%rbp)
-	movq -16(%rbp), %rbx
-	movq %rbx, -8(%rbp)
-	movq -40(%rbp), %rbx
-	movq %rbx, -16(%rbp)
-	movq -40(%rbp), %rsi
+	movq -48(%rbp), %rbx
+	movq -48(%rbp), %rcx
+	addq $1, %rcx
+	imulq $-1, %rcx
+	movq %rbx, (%rbp, %rcx, 8)
+	movq -48(%rbp), %rcx
+	addq $1, %rcx
+	imulq $-1, %rcx
+	movq %rbx, (%rbp, %rcx, 8)
+	movq %rbx, %rsi
 	leaq str.writeln.inum(%rip), %rdi
 	pushq %rax
 	pushq %rcx
@@ -62,12 +36,16 @@ LB0:
 	call _printf
 	popq %rcx
 	popq %rax
-	movq -32(%rbp), %rbx
+	movq -48(%rbp), %rcx
+	addq $1, %rcx
+	imulq $-1, %rcx
+	movq %rbx, (%rbp, %rcx, 8)
+	movq -48(%rbp), %rbx
 	addq $1, %rbx
-	movq %rbx, -32(%rbp)
+	movq %rbx, -48(%rbp)
 	jmp LB0
 LB1:
-	addq $40, %rsp
+	addq $56, %rsp
 	pop %rbp
 	retq
 _main:
