@@ -14,6 +14,7 @@ node_t *mknode(char *s) {
     p->next = NULL;
     p->offset = -1;
     p->type = 0;
+    p->ret_type = 0;
     p->argc = 0;
     p->arg_list = NULL;
     p->l_bound = 0;

@@ -445,7 +445,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  25
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  54
+#define YYNRULES  55
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  126
 
@@ -501,8 +501,8 @@ static const yytype_uint8 yyprhs[] =
       41,    43,    45,    49,    50,    55,    56,    64,    65,    71,
       75,    76,    80,    86,    90,    92,    93,    95,    99,   103,
      105,   107,   112,   119,   124,   133,   135,   140,   142,   147,
-     149,   153,   155,   159,   161,   164,   168,   170,   174,   176,
-     181,   186,   188,   190,   194
+     149,   153,   154,   156,   160,   162,   165,   169,   171,   175,
+     177,   182,   187,   189,   191,   195
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -523,11 +523,11 @@ static const yytype_int8 yyrhs[] =
       75,    40,    71,    -1,    39,    71,    48,    75,    48,    71,
       40,    71,    -1,    31,    -1,    31,    52,    75,    53,    -1,
       31,    -1,    31,    46,    74,    47,    -1,    75,    -1,    74,
-      50,    75,    -1,    76,    -1,    76,    14,    76,    -1,    77,
-      -1,    21,    77,    -1,    76,    21,    77,    -1,    78,    -1,
-      77,    25,    78,    -1,    31,    -1,    31,    46,    74,    47,
-      -1,    31,    52,    75,    53,    -1,    32,    -1,    33,    -1,
-      46,    74,    47,    -1,    29,    78,    -1
+      50,    75,    -1,    -1,    76,    -1,    76,    14,    76,    -1,
+      77,    -1,    21,    77,    -1,    76,    21,    77,    -1,    78,
+      -1,    77,    25,    78,    -1,    31,    -1,    31,    46,    74,
+      47,    -1,    31,    52,    75,    53,    -1,    32,    -1,    33,
+      -1,    46,    74,    47,    -1,    29,    78,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
@@ -537,8 +537,8 @@ static const yytype_uint8 yyrline[] =
      135,   136,   140,   141,   145,   149,   149,   161,   161,   165,
      166,   170,   171,   176,   183,   184,   188,   189,   193,   194,
      195,   196,   197,   198,   199,   203,   204,   208,   209,   215,
-     216,   220,   221,   225,   226,   227,   231,   232,   236,   237,
-     238,   239,   240,   241,   242
+     216,   217,   221,   222,   226,   227,   228,   232,   233,   237,
+     238,   239,   240,   241,   242,   243
 };
 #endif
 
@@ -584,8 +584,8 @@ static const yytype_uint8 yyr1[] =
       60,    60,    61,    61,    62,    64,    63,    65,    63,    66,
       66,    67,    67,    68,    69,    69,    70,    70,    71,    71,
       71,    71,    71,    71,    71,    72,    72,    73,    73,    74,
-      74,    75,    75,    76,    76,    76,    77,    77,    78,    78,
-      78,    78,    78,    78,    78
+      74,    74,    75,    75,    76,    76,    76,    77,    77,    78,
+      78,    78,    78,    78,    78,    78
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -595,8 +595,8 @@ static const yytype_uint8 yyr2[] =
        1,     1,     3,     0,     4,     0,     7,     0,     5,     3,
        0,     3,     5,     3,     1,     0,     1,     3,     3,     1,
        1,     4,     6,     4,     8,     1,     4,     1,     4,     1,
-       3,     1,     3,     1,     2,     3,     1,     3,     1,     4,
-       4,     1,     1,     3,     2
+       3,     0,     1,     3,     1,     2,     3,     1,     3,     1,
+       4,     4,     1,     1,     3,     2
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -608,13 +608,13 @@ static const yytype_uint8 yydefact[] =
        0,     7,     5,    13,     0,     0,     0,    25,     0,     0,
        0,     7,     0,     0,    37,     0,     0,     0,    30,     0,
       24,    26,     0,    29,    17,    15,    12,    13,     3,    10,
-      11,     0,     0,     8,     0,     0,     0,     0,    48,    51,
-      52,     0,     0,    41,    43,    46,     0,     0,    23,     0,
-       0,    20,    20,     0,     0,     6,     0,    39,     0,    44,
-      54,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+      11,     0,     0,     8,    41,     0,     0,     0,    49,    52,
+      53,    41,     0,    42,    44,    47,     0,     0,    23,     0,
+       0,    20,    20,     0,     0,     6,     0,    39,     0,    45,
+      55,    41,     0,     0,     0,     0,     0,     0,     0,     0,
       27,    28,     0,     0,     0,    14,     0,    38,     0,    36,
-       0,     0,    53,    31,    42,    45,    47,    33,     0,     0,
-       0,    18,     0,     0,    40,    49,    50,     0,     0,     0,
+       0,     0,    54,    31,    43,    46,    48,    33,     0,     0,
+       0,    18,     0,     0,    40,    50,    51,     0,     0,     0,
       19,     0,     0,     0,    32,     0,    21,     0,    16,     0,
        0,     0,     0,    34,    22,     9
 };
@@ -1739,78 +1739,83 @@ yyreduce:
     break;
 
   case 41:
-#line 220 "pc.y"
-    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
+#line 217 "pc.y"
+    { (yyval.tVal) = NULL; }
     break;
 
   case 42:
 #line 221 "pc.y"
-    { (yyval.tVal) = mkop(RELOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
+    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 43:
-#line 225 "pc.y"
-    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
+#line 222 "pc.y"
+    { (yyval.tVal) = mkop(RELOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
     break;
 
   case 44:
 #line 226 "pc.y"
-    { (yyval.tVal) = mkop(ADDOP, (yyvsp[(1) - (2)].opVal), (yyvsp[(2) - (2)].tVal), NULL); check_tree_type((yyval.tVal)); }
+    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 45:
 #line 227 "pc.y"
-    { (yyval.tVal) = mkop(ADDOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
+    { (yyval.tVal) = mkop(ADDOP, (yyvsp[(1) - (2)].opVal), (yyvsp[(2) - (2)].tVal), NULL); check_tree_type((yyval.tVal)); }
     break;
 
   case 46:
-#line 231 "pc.y"
-    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
+#line 228 "pc.y"
+    { (yyval.tVal) = mkop(ADDOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
     break;
 
   case 47:
 #line 232 "pc.y"
-    { (yyval.tVal) = mkop(MULOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
+    { (yyval.tVal) = (yyvsp[(1) - (1)].tVal); }
     break;
 
   case 48:
-#line 236 "pc.y"
-    { (yyval.tVal) = mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (1)].sVal)), (yyvsp[(1) - (1)].sVal))); }
+#line 233 "pc.y"
+    { (yyval.tVal) = mkop(MULOP, (yyvsp[(2) - (3)].opVal), (yyvsp[(1) - (3)].tVal), (yyvsp[(3) - (3)].tVal)); check_tree_type((yyval.tVal)); }
     break;
 
   case 49:
 #line 237 "pc.y"
-    { (yyval.tVal) = mktree(FUNCTION_CALL, mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (4)].sVal)), (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); check_arg_type((yyval.tVal)); }
+    { (yyval.tVal) = mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (1)].sVal)), (yyvsp[(1) - (1)].sVal))); }
     break;
 
   case 50:
 #line 238 "pc.y"
-    { (yyval.tVal) = mktree(ARRAY_ACCESS, mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (4)].sVal)), (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
+    { (yyval.tVal) = mktree(FUNCTION_CALL, mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (4)].sVal)), (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); check_arg_type((yyval.tVal)); }
     break;
 
   case 51:
 #line 239 "pc.y"
-    { (yyval.tVal) = mkinum((yyvsp[(1) - (1)].iVal)); }
+    { (yyval.tVal) = mktree(ARRAY_ACCESS, mkid(check_scope(scope_search_all(scope, (yyvsp[(1) - (4)].sVal)), (yyvsp[(1) - (4)].sVal))), (yyvsp[(3) - (4)].tVal)); }
     break;
 
   case 52:
 #line 240 "pc.y"
-    { (yyval.tVal) = mkrnum((yyvsp[(1) - (1)].rVal)); }
+    { (yyval.tVal) = mkinum((yyvsp[(1) - (1)].iVal)); }
     break;
 
   case 53:
 #line 241 "pc.y"
-    { (yyval.tVal) = (yyvsp[(2) - (3)].tVal); }
+    { (yyval.tVal) = mkrnum((yyvsp[(1) - (1)].rVal)); }
     break;
 
   case 54:
 #line 242 "pc.y"
+    { (yyval.tVal) = (yyvsp[(2) - (3)].tVal); }
+    break;
+
+  case 55:
+#line 243 "pc.y"
     { (yyval.tVal) = mktree(NOT, (yyvsp[(2) - (2)].tVal), NULL); }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1814 "y.tab.c"
+#line 1819 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2024,7 +2029,7 @@ yyreturn:
 }
 
 
-#line 247 "pc.y"
+#line 248 "pc.y"
 
 
 int main(int argc, char **argv) {

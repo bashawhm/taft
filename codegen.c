@@ -117,6 +117,25 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             } else {
                 //TODO: support real numbers
             }
+        } else if (t->right->type == ARRAY_ACCESS) {
+            fprintf(taft_asm, "\tleaq str.writeln.inum(%%rip), %%rdi\n");
+            if (t->right->right->type == INUM) {
+                fprintf(taft_asm, "\tleaq -%d(%%rbp), %%rsi\n", (t->right->left->attribute.nVal->offset+(t->right->right->attribute.iVal)+1)*8);
+            } else {
+                char *tmp_reg;
+                regs = reg_pop(regs, &tmp_reg);
+                gen_expr(top, t->right->right, regs);
+                fprintf(taft_asm, "\taddq $%d, %%%s\n", t->right->left->attribute.nVal->offset+1, regs->reg);
+                fprintf(taft_asm, "\timulq $%d, %%%s\n", -1, regs->reg);
+                fprintf(taft_asm, "\tmovq (%%rbp, %%%s, 8), %%rsi\n",  regs->reg);
+                regs = reg_push(regs, tmp_reg);
+            }
+            fprintf(taft_asm, "\tpushq %%rax\n");
+            fprintf(taft_asm, "\tpushq %%rcx\n");
+            fprintf(taft_asm, "\tmovb $0, %%al\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+            fprintf(taft_asm, "\tpopq %%rcx\n");
+            fprintf(taft_asm, "\tpopq %%rax\n");
         } else {
             gen_expr(top, t->right, regs);
             fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
@@ -157,6 +176,25 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
             } else {
                 //TODO: support real numbers
             }
+        } else if (t->right->type == ARRAY_ACCESS) {
+            fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
+            if (t->right->right->type == INUM) {
+                fprintf(taft_asm, "\tleaq -%d(%%rbp), %%rsi\n", (t->right->left->attribute.nVal->offset+(t->right->right->attribute.iVal)+1)*8);
+            } else {
+                char *tmp_reg;
+                regs = reg_pop(regs, &tmp_reg);
+                gen_expr(top, t->right->right, regs);
+                fprintf(taft_asm, "\taddq $%d, %%%s\n", t->right->left->attribute.nVal->offset+1, regs->reg);
+                fprintf(taft_asm, "\timulq $%d, %%%s\n", -1, regs->reg);
+                fprintf(taft_asm, "\tmovq (%%rbp, %%%s, 8), %%rsi\n",  regs->reg);
+                regs = reg_push(regs, tmp_reg);
+            }
+            fprintf(taft_asm, "\tpushq %%rax\n");
+            fprintf(taft_asm, "\tpushq %%rcx\n");
+            fprintf(taft_asm, "\tmovb $0, %%al\n");
+            fprintf(taft_asm, "\tcall _printf\n");
+            fprintf(taft_asm, "\tpopq %%rcx\n");
+            fprintf(taft_asm, "\tpopq %%rax\n");
         } else {
             gen_expr(top, t->right, regs);
             fprintf(taft_asm, "\tmovq %%%s, %%rsi\n", regs->reg);
@@ -185,6 +223,25 @@ void gen_func_call(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 fprintf(taft_asm, "\tcall _scanf\n");
                 fprintf(taft_asm, "\tpopq %%rcx\n");
                 fprintf(taft_asm, "\tpopq %%rax\n");
+        } else if (t->right->type == ARRAY_ACCESS) {
+            fprintf(taft_asm, "\tleaq str.write.inum(%%rip), %%rdi\n");
+            if (t->right->right->type == INUM) {
+                fprintf(taft_asm, "\tleaq -%d(%%rbp), %%rsi\n", (t->right->left->attribute.nVal->offset+(t->right->right->attribute.iVal)+1)*8);
+            } else {
+                char *tmp_reg;
+                regs = reg_pop(regs, &tmp_reg);
+                gen_expr(top, t->right->right, regs);
+                fprintf(taft_asm, "\taddq $%d, %%%s\n", t->right->left->attribute.nVal->offset+1, regs->reg);
+                fprintf(taft_asm, "\timulq $%d, %%%s\n", -1, regs->reg);
+                fprintf(taft_asm, "\tleaq (%%rbp, %%%s, 8), %%rsi\n",  regs->reg);
+                regs = reg_push(regs, tmp_reg);
+            }
+            fprintf(taft_asm, "\tpushq %%rax\n");
+            fprintf(taft_asm, "\tpushq %%rcx\n");
+            fprintf(taft_asm, "\tmovb $0, %%al\n");
+            fprintf(taft_asm, "\tcall _scanf\n");
+            fprintf(taft_asm, "\tpopq %%rcx\n");
+            fprintf(taft_asm, "\tpopq %%rax\n");
         } else {
             yyerror("Failed to put variable into INUM");
         }
@@ -299,7 +356,7 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 if (t->attribute.nVal->offset != -1) {
                     sprintf(name, "-%d(%%rbp), %%%s", ((t->attribute.nVal->offset+1) * 8), regs->reg);
                 } else {
-                    sprintf(name, "INVALID OFFSET");
+                    yyerror("Invalid offset in case 0");
                 }
             }
         } else if (t->type == INUM) {
@@ -350,7 +407,7 @@ void gen_expr(scope_t *top, tree_t *t, reg_stack_t *regs) {
                     if (t->right->attribute.nVal->offset != -1) {
                         sprintf(name, "-%d(%%rbp), %%%s", ((t->right->attribute.nVal->offset+1) * 8), regs->reg);
                     } else {
-                        sprintf(name, "INVALID OFFSET");
+                        yyerror("Invalid offset in case 1");
                     }
                 }
             } else {
@@ -411,6 +468,7 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
     }
     if (t->type == FUNCTION_CALL || t->type == PROCEDURE_CALL) {
         gen_func_call(top, t, regs);
+        return;
     }
 
     if (t -> type == ASSIGNOP) {
@@ -426,6 +484,13 @@ void aux_gen_tree(scope_t *top, tree_t *t, reg_stack_t *regs) {
                 fprintf(taft_asm, "\tmovq (%%rbp, %%%s, 8), %%%s\n",  regs->reg, tmp_reg);
                 regs = reg_push(regs, tmp_reg);
             }
+        } else if (t -> right -> type == FUNCTION_CALL) {
+            char *tmp_reg;
+            regs = reg_pop(regs, &tmp_reg);
+            gen_expr(top, t->right->right, regs);
+            gen_func_call(top, t->right, regs);
+            fprintf(taft_asm, "\tmovq %%rax, %%%s\n", regs->reg);
+            regs = reg_push(regs, tmp_reg);
         } else {
             gen_expr(top, t->right, regs);
         }
@@ -474,6 +539,7 @@ void gen_tree(scope_t *top, tree_t *t) {
     reg_stack_t *regs = mkreg_stack("rbx");
     regs->next = mkreg_stack("rcx");
     regs->next->next = mkreg_stack("rdx");
+    regs->next->next->next = mkreg_stack("rsi");
     fprintf(taft_asm, "\tpushq %%rbp\n");
     fprintf(taft_asm, "\tmovq %%rsp, %%rbp\n");
     if (scope_get_size(top) > 1) {

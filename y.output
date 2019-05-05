@@ -83,37 +83,38 @@ Grammar
 
    38 expression_list: expression
    39                | expression_list ',' expression
+   40                | /* empty */
 
-   40 expression: simple_expression
-   41           | simple_expression RELOP simple_expression
+   41 expression: simple_expression
+   42           | simple_expression RELOP simple_expression
 
-   42 simple_expression: term
-   43                  | ADDOP term
-   44                  | simple_expression ADDOP term
+   43 simple_expression: term
+   44                  | ADDOP term
+   45                  | simple_expression ADDOP term
 
-   45 term: factor
-   46     | term MULOP factor
+   46 term: factor
+   47     | term MULOP factor
 
-   47 factor: ID
-   48       | ID '(' expression_list ')'
-   49       | ID '[' expression ']'
-   50       | INUM
-   51       | RNUM
-   52       | '(' expression_list ')'
-   53       | NOT factor
+   48 factor: ID
+   49       | ID '(' expression_list ')'
+   50       | ID '[' expression ']'
+   51       | INUM
+   52       | RNUM
+   53       | '(' expression_list ')'
+   54       | NOT factor
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 2 18 37 48 52
-')' (41) 2 18 37 48 52
+'(' (40) 2 18 37 49 53
+')' (41) 2 18 37 49 53
 ',' (44) 4 39
 '.' (46) 2
 ':' (58) 5 15 20 21
 ';' (59) 2 5 11 15 17 21 26 33
-'[' (91) 8 35 49
-']' (93) 8 35 49
+'[' (91) 8 35 50
+']' (93) 8 35 50
 error (256)
 PROGRAM (258) 2
 BBEGIN (259) 22
@@ -126,26 +127,26 @@ REAL (265) 10
 ARRAY (266) 8
 OF (267) 8
 ASSIGNOP (268) 27
-RELOP (269) 41
+RELOP (269) 42
 EQ (270)
 NE (271)
 LT (272)
 LE (273)
 GT (274)
 GE (275)
-ADDOP (276) 43 44
+ADDOP (276) 44 45
 PLUS (277)
 MINUS (278)
 OR (279)
-MULOP (280) 46
+MULOP (280) 47
 STAR (281)
 SLASH (282)
 AND (283)
-NOT (284) 53
+NOT (284) 54
 DOTDOT (285) 8
-ID (286) 2 3 4 15 17 34 35 36 37 47 48 49
-INUM (287) 8 50
-RNUM (288) 51
+ID (286) 2 3 4 15 17 34 35 36 37 48 49 50
+INUM (287) 8 51
+RNUM (288) 52
 VAR (289) 5
 IF (290) 30 31
 THEN (291) 30 31
@@ -203,15 +204,15 @@ variable (72)
 procedure_statement (73)
     on left: 36 37, on right: 28
 expression_list (74)
-    on left: 38 39, on right: 37 39 48 52
+    on left: 38 39 40, on right: 37 39 49 53
 expression (75)
-    on left: 40 41, on right: 27 30 31 32 33 35 38 39 49
+    on left: 41 42, on right: 27 30 31 32 33 35 38 39 50
 simple_expression (76)
-    on left: 42 43 44, on right: 40 41 44
+    on left: 43 44 45, on right: 41 42 45
 term (77)
-    on left: 45 46, on right: 42 43 44 46
+    on left: 46 47, on right: 43 44 45 47
 factor (78)
-    on left: 47 48 49 50 51 52 53, on right: 45 46 53
+    on left: 48 49 50 51 52 53 54, on right: 46 47 54
 
 
 state 0
@@ -628,6 +629,8 @@ state 44
     RNUM   shift, and go to state 50
     '('    shift, and go to state 51
 
+    $default  reduce using rule 40 (expression_list)
+
     expression_list    go to state 66
     expression         go to state 67
     simple_expression  go to state 53
@@ -654,7 +657,7 @@ state 45
 
 state 46
 
-   43 simple_expression: ADDOP . term
+   44 simple_expression: ADDOP . term
 
     NOT   shift, and go to state 47
     ID    shift, and go to state 48
@@ -668,7 +671,7 @@ state 46
 
 state 47
 
-   53 factor: NOT . factor
+   54 factor: NOT . factor
 
     NOT   shift, and go to state 47
     ID    shift, and go to state 48
@@ -681,33 +684,33 @@ state 47
 
 state 48
 
-   47 factor: ID .
-   48       | ID . '(' expression_list ')'
-   49       | ID . '[' expression ']'
+   48 factor: ID .
+   49       | ID . '(' expression_list ')'
+   50       | ID . '[' expression ']'
 
     '('  shift, and go to state 71
     '['  shift, and go to state 72
 
-    $default  reduce using rule 47 (factor)
+    $default  reduce using rule 48 (factor)
 
 
 state 49
 
-   50 factor: INUM .
-
-    $default  reduce using rule 50 (factor)
-
-
-state 50
-
-   51 factor: RNUM .
+   51 factor: INUM .
 
     $default  reduce using rule 51 (factor)
 
 
+state 50
+
+   52 factor: RNUM .
+
+    $default  reduce using rule 52 (factor)
+
+
 state 51
 
-   52 factor: '(' . expression_list ')'
+   53 factor: '(' . expression_list ')'
 
     ADDOP  shift, and go to state 46
     NOT    shift, and go to state 47
@@ -715,6 +718,8 @@ state 51
     INUM   shift, and go to state 49
     RNUM   shift, and go to state 50
     '('    shift, and go to state 51
+
+    $default  reduce using rule 40 (expression_list)
 
     expression_list    go to state 73
     expression         go to state 67
@@ -733,31 +738,31 @@ state 52
 
 state 53
 
-   40 expression: simple_expression .
-   41           | simple_expression . RELOP simple_expression
-   44 simple_expression: simple_expression . ADDOP term
+   41 expression: simple_expression .
+   42           | simple_expression . RELOP simple_expression
+   45 simple_expression: simple_expression . ADDOP term
 
     RELOP  shift, and go to state 75
     ADDOP  shift, and go to state 76
 
-    $default  reduce using rule 40 (expression)
+    $default  reduce using rule 41 (expression)
 
 
 state 54
 
-   42 simple_expression: term .
-   46 term: term . MULOP factor
+   43 simple_expression: term .
+   47 term: term . MULOP factor
 
     MULOP  shift, and go to state 77
 
-    $default  reduce using rule 42 (simple_expression)
+    $default  reduce using rule 43 (simple_expression)
 
 
 state 55
 
-   45 term: factor .
+   46 term: factor .
 
-    $default  reduce using rule 45 (term)
+    $default  reduce using rule 46 (term)
 
 
 state 56
@@ -889,24 +894,24 @@ state 68
 
 state 69
 
-   43 simple_expression: ADDOP term .
-   46 term: term . MULOP factor
+   44 simple_expression: ADDOP term .
+   47 term: term . MULOP factor
 
     MULOP  shift, and go to state 77
 
-    $default  reduce using rule 43 (simple_expression)
+    $default  reduce using rule 44 (simple_expression)
 
 
 state 70
 
-   53 factor: NOT factor .
+   54 factor: NOT factor .
 
-    $default  reduce using rule 53 (factor)
+    $default  reduce using rule 54 (factor)
 
 
 state 71
 
-   48 factor: ID '(' . expression_list ')'
+   49 factor: ID '(' . expression_list ')'
 
     ADDOP  shift, and go to state 46
     NOT    shift, and go to state 47
@@ -914,6 +919,8 @@ state 71
     INUM   shift, and go to state 49
     RNUM   shift, and go to state 50
     '('    shift, and go to state 51
+
+    $default  reduce using rule 40 (expression_list)
 
     expression_list    go to state 90
     expression         go to state 67
@@ -924,7 +931,7 @@ state 71
 
 state 72
 
-   49 factor: ID '[' . expression ']'
+   50 factor: ID '[' . expression ']'
 
     ADDOP  shift, and go to state 46
     NOT    shift, and go to state 47
@@ -942,7 +949,7 @@ state 72
 state 73
 
    39 expression_list: expression_list . ',' expression
-   52 factor: '(' expression_list . ')'
+   53 factor: '(' expression_list . ')'
 
     ')'  shift, and go to state 92
     ','  shift, and go to state 88
@@ -967,7 +974,7 @@ state 74
 
 state 75
 
-   41 expression: simple_expression RELOP . simple_expression
+   42 expression: simple_expression RELOP . simple_expression
 
     ADDOP  shift, and go to state 46
     NOT    shift, and go to state 47
@@ -983,7 +990,7 @@ state 75
 
 state 76
 
-   44 simple_expression: simple_expression ADDOP . term
+   45 simple_expression: simple_expression ADDOP . term
 
     NOT   shift, and go to state 47
     ID    shift, and go to state 48
@@ -997,7 +1004,7 @@ state 76
 
 state 77
 
-   46 term: term MULOP . factor
+   47 term: term MULOP . factor
 
     NOT   shift, and go to state 47
     ID    shift, and go to state 48
@@ -1127,7 +1134,7 @@ state 89
 state 90
 
    39 expression_list: expression_list . ',' expression
-   48 factor: ID '(' expression_list . ')'
+   49 factor: ID '(' expression_list . ')'
 
     ')'  shift, and go to state 105
     ','  shift, and go to state 88
@@ -1135,16 +1142,16 @@ state 90
 
 state 91
 
-   49 factor: ID '[' expression . ']'
+   50 factor: ID '[' expression . ']'
 
     ']'  shift, and go to state 106
 
 
 state 92
 
-   52 factor: '(' expression_list ')' .
+   53 factor: '(' expression_list ')' .
 
-    $default  reduce using rule 52 (factor)
+    $default  reduce using rule 53 (factor)
 
 
 state 93
@@ -1159,29 +1166,29 @@ state 93
 
 state 94
 
-   41 expression: simple_expression RELOP simple_expression .
-   44 simple_expression: simple_expression . ADDOP term
+   42 expression: simple_expression RELOP simple_expression .
+   45 simple_expression: simple_expression . ADDOP term
 
     ADDOP  shift, and go to state 76
 
-    $default  reduce using rule 41 (expression)
+    $default  reduce using rule 42 (expression)
 
 
 state 95
 
-   44 simple_expression: simple_expression ADDOP term .
-   46 term: term . MULOP factor
+   45 simple_expression: simple_expression ADDOP term .
+   47 term: term . MULOP factor
 
     MULOP  shift, and go to state 77
 
-    $default  reduce using rule 44 (simple_expression)
+    $default  reduce using rule 45 (simple_expression)
 
 
 state 96
 
-   46 term: term MULOP factor .
+   47 term: term MULOP factor .
 
-    $default  reduce using rule 46 (term)
+    $default  reduce using rule 47 (term)
 
 
 state 97
@@ -1249,16 +1256,16 @@ state 104
 
 state 105
 
-   48 factor: ID '(' expression_list ')' .
+   49 factor: ID '(' expression_list ')' .
 
-    $default  reduce using rule 48 (factor)
+    $default  reduce using rule 49 (factor)
 
 
 state 106
 
-   49 factor: ID '[' expression ']' .
+   50 factor: ID '[' expression ']' .
 
-    $default  reduce using rule 49 (factor)
+    $default  reduce using rule 50 (factor)
 
 
 state 107

@@ -214,6 +214,7 @@ procedure_statement
 expression_list
     : expression                     { $$  = $1; }
     | expression_list ',' expression { $$ = mktree(COMMA, $1, $3); }
+    | /*empty*/ { $$ = NULL; }
     ;
 
 expression
