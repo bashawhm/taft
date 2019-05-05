@@ -7,6 +7,8 @@
 #include "codegen.h"
 #include "y.tab.h"
 
+extern int yyerror(char*);
+
 /* ----------------------------------------------------------------------------- 
  * hashpjw
  * Peter J. Weinberger's hash function 
@@ -95,6 +97,9 @@ node_t *scope_insert(scope_t *top, char *name) {
         top->table[index] = node_insert(tmp, "writeln");
         top->table[index] -> type = PROCEDURE;
         return top->table[index];
+    }
+    if (scope_search(top, name) != NULL) {
+        yyerror("Double declaration of local variable");
     }
     int index = hashpjw(name);
     node_t *tmp = top->table[index];

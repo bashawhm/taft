@@ -6,31 +6,22 @@ _main:                                  ## @main
 ## %bb.0:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$48, %rsp
-	movq	___stack_chk_guard@GOTPCREL(%rip), %rax
-	movq	(%rax), %rax
-	movq	%rax, -8(%rbp)
-	movl	$0, -36(%rbp)
-	movl	$2, -40(%rbp)
-	movl	$1, -44(%rbp)
-	movl	-40(%rbp), %ecx
-	addl	-44(%rbp), %ecx
-	movslq	%ecx, %rax
-	movl	-32(%rbp,%rax,4), %ecx
-	movl	%ecx, -48(%rbp)
-	movq	___stack_chk_guard@GOTPCREL(%rip), %rax
-	movq	(%rax), %rax
-	movq	-8(%rbp), %rdx
-	cmpq	%rdx, %rax
-	jne	LBB0_2
-## %bb.1:
 	xorl	%eax, %eax
-	addq	$48, %rsp
+	movl	$5, %ecx
+	movl	%ecx, %edx
+	movl	$0, -4(%rbp)
+	movq	$5, -16(%rbp)
+	movq	-16(%rbp), %rsi
+	movl	%eax, -20(%rbp)         ## 4-byte Spill
+	movq	%rsi, %rax
+	movq	%rdx, -32(%rbp)         ## 8-byte Spill
+	cqto
+	movq	-32(%rbp), %rsi         ## 8-byte Reload
+	idivq	%rsi
+	movq	%rax, -16(%rbp)
+	movl	-20(%rbp), %eax         ## 4-byte Reload
 	popq	%rbp
 	retq
-LBB0_2:
-	callq	___stack_chk_fail
-	ud2
                                         ## -- End function
 
 .subsections_via_symbols

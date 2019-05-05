@@ -37,4 +37,4 @@ lex.yy.c: pc.l
 	$(LEX) -l pc.l
 
 clean:
-	rm -f taft *.o y.tab.* lex.yy.*
+	rm -f taft *.o y.tab.* lex.yy.* y.output
