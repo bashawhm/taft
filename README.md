@@ -3,8 +3,8 @@
 The worlds greatest Pascal compiler by volume, writen for my compiler construction class
 
 ## Usage
-make clean; make
-./taft <filename>
+`make clean; make`
+`./taft <filename>`
 
 The compiler will output a file called a.s containing 64 bit assembly representing the
 program. 
