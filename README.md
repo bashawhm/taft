@@ -20,7 +20,7 @@ one should remove the lines `.globl _main` and rename the `_main` function to `m
 (1.0) Lexical Analysis
 
 - Line numbering                                              DONE
-- Two styles of comments                                      DONE
+- Two styles of comments                                      DONE ( `(**)` and `//`)
 
 (1.5) Syntax Analysis: grammar adjustments
 
@@ -41,7 +41,7 @@ one should remove the lines `.globl _main` and rename the `_main` function to `m
 (3.0) Semantic Analysis & Type Checking
 
 - Check list                                                  PARTIAL (See tests/Semantic/semantic-check-list.txt)
-- Error reporting                                             PARTIAL (Not fantastic error messages, but correct)
+- Error reporting                                             DONE (Not fantastic error messages, but correct)
 
 (4.0) Code Generation
 
@@ -51,7 +51,7 @@ one should remove the lines `.globl _main` and rename the `_main` function to `m
 - Nonlocal names: base frame pointer (static scope parent)    NOT DONE
 - Recursive routines (example: GCD program)                   PARTIAL (functions and procedures can call themselves, but argument passing isn't implimented - here's no point)
 - Complex expressions (register spilling)                     NOT DONE
-- (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support)
+- (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support, but will always index from `0` to `rBouund - lBound`)
 
 Other things not implimented and not referenced above:
 - Uninary minus
