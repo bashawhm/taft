@@ -13,8 +13,8 @@ program.
 The Pascal files in the examples/ directory were used to test the compiler and it's output.
 As well, files from the tests/ directory were used to supliment the testing. The files were
 run through the compiler to generate the output, which was then compiled to a binary by clang
-version 1001.0.46.4 on Mac OS 10.14. If one wishes to use GCC to compile the assembly, one
-should remove the lines `.globl _main` and rename the `_main` function to `main`.
+version 1001.0.46.4 on Mac OS 10.14. If one wishes to use GCC on Linux to compile the assembly,
+one should remove the lines `.globl _main` and rename the `_main` function to `main`.
 
 ## Features
 (1.0) Lexical Analysis
