@@ -49,7 +49,7 @@ one should remove the lines `.globl _main` and rename the `_main` function to `m
 - Simple expressions (arithmetic and relational): gencode     DONE
 - Statements (assignment, conditional, loop)                  DONE
 - Nonlocal names: base frame pointer (static scope parent)    NOT DONE
-- Recursive routines (example: GCD program)                   PARTIAL (functions and procedures can call themselves, but argument passing isn't implimented - here's no point)
+- Recursive routines (example: GCD program)                   PARTIAL (functions and procedures can call themselves, but argument passing isn't implimented so there's no point)
 - Complex expressions (register spilling)                     NOT DONE
 - (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support, but will always index from `0` to `rBouund - lBound`)
 
