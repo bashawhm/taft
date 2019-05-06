@@ -14,6 +14,7 @@ number      [0-9]+
 ident       [A-Za-z][A-Za-z0-9]*
 
 %x COMMENT_MODE
+%x COMMENT_MODE_SINGLE
 
 %%
 
@@ -21,6 +22,9 @@ ident       [A-Za-z][A-Za-z0-9]*
 <COMMENT_MODE>"*)" {/*fprintf(stderr, "[END COMMENT]");*/ BEGIN(INITIAL);}
 <COMMENT_MODE>\n   {/*fprintf(stderr, "\n", yytext);*/ line_num++;}
 <COMMENT_MODE>.    {/*fprintf(stderr, "%s", yytext);*/ }
+"//"               {/*fprintf(stderr, "[COMMENT]");*/ BEGIN(COMMENT_MODE_SINGLE);}
+<COMMENT_MODE_SINGLE>\n {BEGIN(INITIAL);}
+<COMMENT_MODE_SINGLE>.  {}
 
 {whitespace}       ;
 
@@ -64,7 +68,6 @@ ident       [A-Za-z][A-Za-z0-9]*
 
 
 {number}            {/*fprintf(stderr, "[INUM;%d]", yylval.iVal = atoi(yytext));*/ yylval.iVal = atoi(yytext);  return INUM; }
--{number}            {/*fprintf(stderr, "[INUM;%d]", yylval.iVal = atoi(yytext));*/ yylval.iVal = atoi(yytext);  return INUM; }
 {number}"."{number} {/*fprintf(stderr, "[RNUM;%f]", yylval.rVal = atof(yytext));*/ yylval.rVal = atof(yytext); return RNUM; }
 {ident}             {/*fprintf(stderr, "[ID;%s]", yytext);*/ yylval.sVal = strdup(yytext); return ID; }
 
