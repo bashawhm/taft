@@ -19,39 +19,39 @@ should remove the lines `.globl _main` and rename the `_main` function to `main`
 ## Features
 (1.0) Lexical Analysis
 
-    Line numbering                                              DONE
-    Two styles of comments                                      DONE
+- Line numbering                                              DONE
+- Two styles of comments                                      DONE
 
 (1.5) Syntax Analysis: grammar adjustments
 
-    Unlimited nesting of subprograms                            DONE
-    Array access on both sides of assignment                    DONE
-    Allow for statements                                        PARTIAL (No pascal style for loops, but C style are implimented)
-    (optional) Another loop construct                           DONE (C style for loops are implimented)
+- Unlimited nesting of subprograms                            DONE
+- Array access on both sides of assignment                    DONE
+- Allow for statements                                        PARTIAL (No pascal style for loops, but C style are implimented)
+- (optional) Another loop construct                           DONE (C style for loops are implimented)
 
 (2.0) Symbol Table
 
-    Memory-leak handler                                         NOT DONE
+- Memory-leak handler                                         NOT DONE
 
 (2.5) Syntax Tree (Intermediate Code Generation)
 
-    Visual print                                                DONE
-    Memory-leak handler                                         NOT DONE
+- Visual print                                                DONE
+- Memory-leak handler                                         NOT DONE
 
 (3.0) Semantic Analysis & Type Checking
 
-    Check list                                                  PARTIAL (See tests/Semantic/semantic-check-list.txt)
-    Error reporting                                             PARTIAL (Not fantastic error messages, but correct)
+- Check list                                                  PARTIAL (See tests/Semantic/semantic-check-list.txt)
+- Error reporting                                             PARTIAL (Not fantastic error messages, but correct)
 
 (4.0) Code Generation
 
-    Input/Output statements                                     DONE
-    Simple expressions (arithmetic and relational): gencode     DONE
-    Statements (assignment, conditional, loop)                  DONE
-    Nonlocal names: base frame pointer (static scope parent)    NOT DONE
-    Recursive routines (example: GCD program)                   PARTIAL (functions and procedures can call themselves, but argument passing isn't implimented so there's no point)
-    Complex expressions (register spilling)                     NOT DONE
-    (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support)
+- Input/Output statements                                     DONE
+- Simple expressions (arithmetic and relational): gencode     DONE
+- Statements (assignment, conditional, loop)                  DONE
+- Nonlocal names: base frame pointer (static scope parent)    NOT DONE
+- Recursive routines (example: GCD program)                   PARTIAL (functions and procedures can call themselves, but argument passing isn't implimented - here's no point)
+- Complex expressions (register spilling)                     NOT DONE
+- (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support)
 
 Other things not implimented, but not referenced above:
 - Uninary minus
