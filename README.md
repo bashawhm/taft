@@ -63,7 +63,7 @@ See tests/Semantic/semantic-check-list.txt
 ## Freewill project
 
 For the freewill project I targeted 64 bit assembly instead of 32 bit, as well as implimented
-C-Style for loops.
+C-Style for loops. As well, I implimented Code Generation for integer Arrays.
 
 ## Haiku
 See haiku.txt
