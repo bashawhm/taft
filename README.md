@@ -53,7 +53,7 @@ should remove the lines `.globl _main` and rename the `_main` function to `main`
 - Complex expressions (register spilling)                     NOT DONE
 - (optional) Arrays (L-value, R-value, parameters, nonlocal)  PARTIAL (Integer array support)
 
-Other things not implimented, but not referenced above:
+Other things not implimented and not referenced above:
 - Uninary minus
 - nesting of array indexing
 
@@ -65,5 +65,5 @@ See tests/Semantic/semantic-check-list.txt
 For the freewill project I targeted 64 bit assembly instead of 32 bit, as well as implimented
 C-Style for loops.
 
-##Haiku
+## Haiku
 See haiku.txt
